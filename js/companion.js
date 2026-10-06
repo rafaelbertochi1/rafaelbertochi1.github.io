@@ -8,6 +8,8 @@
   if (!RBF || document.documentElement.classList.contains("direto")) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const EN = document.documentElement.lang === "en";
+  const t = (pt, en) => (EN ? en : pt);
   const store = {
     get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignora */ } },
@@ -43,7 +45,7 @@
   const buddy = document.createElement("button");
   buddy.type = "button";
   buddy.className = "buddy";
-  buddy.setAttribute("aria-label", "Desafiar o robô para um jogo da velha");
+  buddy.setAttribute("aria-label", t("Desafiar o robô para um jogo da velha", "Challenge the robot to tic-tac-toe"));
   buddy.setAttribute("aria-haspopup", "dialog");
   buddy.innerHTML = '<span class="buddy__fly"><span class="buddy__say" aria-hidden="true"></span><span class="buddy__sprite" aria-hidden="true"></span></span>';
   document.body.appendChild(buddy);
@@ -54,20 +56,20 @@
   panel.className = "ttt";
   panel.hidden = true;
   panel.setAttribute("role", "dialog");
-  panel.setAttribute("aria-label", "Jogo da velha contra o robô");
+  panel.setAttribute("aria-label", t("Jogo da velha contra o robô", "Tic-tac-toe against the robot"));
   panel.innerHTML = `
     <div class="ttt__head">
-      <span>JOGO DA VELHA</span>
-      <button type="button" class="ttt__close" aria-label="Fechar jogo">✕</button>
+      <span>${t("JOGO DA VELHA", "TIC-TAC-TOE")}</span>
+      <button type="button" class="ttt__close" aria-label="${t("Fechar jogo", "Close game")}">✕</button>
     </div>
     <p class="ttt__msg" aria-live="polite"></p>
     <div class="ttt__board">
-      ${Array.from({ length: 9 }, (_, i) => `<button type="button" class="ttt__cell" data-i="${i}" aria-label="Casa ${i + 1}, vazia" disabled></button>`).join("")}
+      ${Array.from({ length: 9 }, (_, i) => `<button type="button" class="ttt__cell" data-i="${i}" aria-label="${t("Casa", "Square")} ${i + 1}, ${t("vazia", "empty")}" disabled></button>`).join("")}
       <span class="ttt__builder" aria-hidden="true"></span>
     </div>
     <p class="ttt__score" aria-live="polite"></p>
     <div class="ttt__actions">
-      <button type="button" class="ttt__again" hidden>Jogar de novo ▶</button>
+      <button type="button" class="ttt__again" hidden>${t("Jogar de novo ▶", "Play again ▶")}</button>
     </div>`;
   document.body.appendChild(panel);
 
@@ -277,10 +279,18 @@
 
   // ---------- Comentários sobre as seções ----------
   const SECTIONS = [
-    { id: "missoes", lines: ["Esses robôs que eu criei rodam em produção de verdade!", "Meus repositórios estão no GitHub, dá uma olhada!"] },
-    { id: "ficha", lines: ["Meus primos montaram a minha ficha!", "Clica no meu inventário pra ver onde usei cada coisa!"] },
-    { id: "jornada", lines: ["Cada save point é uma fase da minha carreira.", "Do Excel com VBA aos robôs em Python!"] },
-    { id: "python", lines: ["Bora aprender Python? Começa pela calculadora!", "Cada desafio tem uma conquista!"] },
+    { id: "missoes", lines: EN
+      ? ["These bots I built run in production for real!", "My repositories are on GitHub, take a look!"]
+      : ["Esses robôs que eu criei rodam em produção de verdade!", "Meus repositórios estão no GitHub, dá uma olhada!"] },
+    { id: "ficha", lines: EN
+      ? ["My cousins built my character sheet!", "Click my inventory to see where I used each thing!"]
+      : ["Meus primos montaram a minha ficha!", "Clica no meu inventário pra ver onde usei cada coisa!"] },
+    { id: "jornada", lines: EN
+      ? ["Each save point is a stage of my career.", "From Excel macros to Python bots!"]
+      : ["Cada save point é uma fase da minha carreira.", "Do Excel com VBA aos robôs em Python!"] },
+    { id: "python", lines: EN
+      ? ["Want to learn Python? Start with the calculator!", "Every challenge has an achievement!"]
+      : ["Bora aprender Python? Começa pela calculadora!", "Cada desafio tem uma conquista!"] },
     { id: "contato", end: true },
   ].map((sec) => Object.assign(sec, {
     el: document.getElementById(sec.id),
@@ -320,7 +330,7 @@
 
   function challenge() {
     buddy.classList.add("is-challenge");
-    bubble(played ? "Revanche? Eu te desafio para um jogo!" : "Eu te desafio para um jogo!", 0);
+    bubble(played ? t("Revanche? Eu te desafio para um jogo!", "Rematch? I challenge you to a game!") : t("Eu te desafio para um jogo!", "I challenge you to a game!"), 0);
     hop();
     clearInterval(hopTimer);
     hopTimer = setInterval(hop, 3200);
@@ -366,7 +376,7 @@
     }
     clearTimeout(roamTimer);
     if (sec.end) {
-      bubble("Gostou? Me chame para conversarmos!", 0);
+      bubble(t("Gostou? Me chame para conversarmos!", "Liked it? Reach out and let's talk!"), 0);
       endTimer = setTimeout(() => {
         if (current === sec && !panelOpen) { loopTrick(); challenge(); }
       }, 9000); // a frase "Gostou?..." fica 9 s antes do desafio
@@ -379,7 +389,9 @@
   }
 
   // ---------- Vida própria: passeia, pousa nas coisas, faz graça ----------
-  const CHIRPS = ["Psiu!", "Bip bop!", "Tô de olho!", "Tudo certo aí?", "Rolando junto!"];
+  const CHIRPS = EN
+    ? ["Psst!", "Beep boop!", "I'm watching!", "All good there?", "Scrolling along!"]
+    : ["Psiu!", "Bip bop!", "Tô de olho!", "Tudo certo aí?", "Rolando junto!"];
   const PERCHES = [".card", ".section__title", ".subhead", ".sheet", ".save__body", ".trophy", ".vsc", ".qach__item", ".continue", ".quest"];
   let roamTimer;
 
@@ -458,7 +470,18 @@
   let semVitoria = 0;    // partidas seguidas sem o visitante vencer
 
   // Provocações quando o robô vence (não repete até usar todas)
-  const TAUNTS = [
+  const TAUNTS = EN ? [
+    "I won! Want a rematch?",
+    "GG! Beep boop, I win.",
+    "Robot 1, human 0.",
+    "I trained for this in Python!",
+    "Didn't even need the full minimax.",
+    "Easy, easy. One more?",
+    "My code has no bugs. Not today.",
+    "Gonna tell my cousins!",
+    "I calculated everything. Or was it luck?",
+    "Robot wins! Try again?",
+  ] : [
     "Ganhei! Quer revanche?",
     "GG! Bip bop, venci.",
     "Robô 1, humano 0.",
@@ -477,7 +500,9 @@
   }
 
   function renderScore() {
-    scoreEl.textContent = `VOCÊ ${score.voce}  ·  VELHA ${score.velha}  ·  ROBÔ ${score.robo}`;
+    scoreEl.textContent = EN
+      ? `YOU ${score.voce}  ·  DRAWS ${score.velha}  ·  ROBOT ${score.robo}`
+      : `VOCÊ ${score.voce}  ·  VELHA ${score.velha}  ·  ROBÔ ${score.robo}`;
   }
 
   function winnerOf(b) {
@@ -531,7 +556,7 @@
     c.innerHTML = board[i] ? MARK[board[i]] : "";
     c.classList.toggle("is-x", board[i] === "X");
     c.classList.toggle("is-o", board[i] === "O");
-    c.setAttribute("aria-label", `Casa ${i + 1}, ${board[i] === "X" ? "X (você)" : board[i] === "O" ? "O (robô)" : "vazia"}`);
+    c.setAttribute("aria-label", `${t("Casa", "Square")} ${i + 1}, ${board[i] === "X" ? t("X (você)", "X (you)") : board[i] === "O" ? t("O (robô)", "O (robot)") : t("vazia", "empty")}`);
   }
 
   function lock(on) {
@@ -544,7 +569,7 @@
   }
 
   async function buildBoard() {
-    say("Construindo o tabuleiro...");
+    say(t("Construindo o tabuleiro...", "Building the board..."));
     boardEl.classList.add("is-building");
     builder.classList.add("is-on");
     for (const i of [0, 1, 2, 5, 4, 3, 6, 7, 8]) {
@@ -570,11 +595,11 @@
     turn = starter;
     starter = starter === "X" ? "O" : "X"; // alterna quem começa
     if (turn === "O") {
-      say("Eu começo!");
+      say(t("Eu começo!", "I go first!"));
       lock(true);
       await robotTurn();
     } else {
-      say("Você é o X. Sua vez!");
+      say(t("Você é o X. Sua vez!", "You're X. Your turn!"));
       lock(false);
       const firstFree = cells.find((c) => !c.disabled);
       if (firstFree) firstFree.focus({ preventScroll: true });
@@ -614,7 +639,7 @@
 
   async function robotTurn() {
     const my = game;
-    say(pick(["Hmm...", "Calculando...", "Deixa eu ver...", "Pensando..."]));
+    say(pick(EN ? ["Hmm...", "Calculating...", "Let me see...", "Thinking..."] : ["Hmm...", "Calculando...", "Deixa eu ver...", "Pensando..."]));
     await wait(350 + Math.random() * 350);
     if (my !== game || over) return;
     const i = robotChoice();
@@ -623,7 +648,7 @@
     builder.innerHTML = RBF.sprite("robotFly");
     builder.classList.add("is-on");
     moveBuilder(i);
-    say("Minha vez!");
+    say(t("Minha vez!", "My turn!"));
     await wait(320);
     if (my !== game) return;
     // ...e desenha
@@ -635,7 +660,7 @@
     paint(i);
     if (!checkEnd()) {
       turn = "X";
-      say("Sua vez!");
+      say(t("Sua vez!", "Your turn!"));
       lock(false);
     }
   }
@@ -665,16 +690,16 @@
     } else if (w.who === "X") {
       score.voce++;
       streak = streak < 0 ? streak - 1 : -1;
-      say(pick(["Você venceu! Bug no meu código...", "Vitória sua! Vou revisar minha lógica.", "Perdi! Bem jogado."]));
+      say(pick(EN ? ["You won! Bug in my code...", "Your win! I'll review my logic.", "I lost! Well played."] : ["Você venceu! Bug no meu código...", "Vitória sua! Vou revisar minha lógica.", "Perdi! Bem jogado."]));
       if (!score.venceu) {
         score.venceu = true;
-        if (RBF.achievement) RBF.achievement("ttt", "Você venceu o robô no jogo da velha", "Conquista desbloqueada!");
-        else RBF.toast("Conquista: você venceu o robô!");
+        if (RBF.achievement) RBF.achievement("ttt", t("Você venceu o robô no jogo da velha", "You beat the robot at tic-tac-toe"), t("Conquista desbloqueada!", "Achievement unlocked!"));
+        else RBF.toast(t("Conquista: você venceu o robô!", "Achievement: you beat the robot!"));
       }
     } else {
       score.velha++;
       streak = 0;
-      say(pick(["Deu velha! Empate.", "Velha! Ninguém ganhou.", "Empate justo!"]));
+      say(pick(EN ? ["It's a draw!", "Draw! Nobody won.", "A fair tie!"] : ["Deu velha! Empate.", "Velha! Ninguém ganhou.", "Empate justo!"]));
     }
     // Ajusta a dificuldade para alternar entre vitórias, derrotas e empates:
     // a cada partida sem o visitante vencer, o robô erra mais; depois que ele
@@ -717,7 +742,7 @@
     mode = { kind: "perch" };
     scheduleRoam(2600);
     if (played && state === "air") {
-      bubble(pick(["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
+      bubble(pick(EN ? ["Come back anytime!", "See you next time!", "That was fun!"] : ["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
       setTimeout(check, 2300);
     } else {
       check();

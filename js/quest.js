@@ -8,7 +8,10 @@
   if (!RBF || !document.getElementById("vsc")) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const FILE_DIR = "C:\\desafios\\";
+  const EN = document.documentElement.lang === "en";
+  const tr = (pt, en) => (EN ? en : pt); // escolhe o texto do idioma da página
+  const FOLDER = tr("desafios", "challenges");
+  const FILE_DIR = `C:\\${FOLDER}\\`;
 
   // ---------- Ícones das conquistas (pixel art) ----------
   const ICONS = {
@@ -150,7 +153,7 @@
 
   // ---------- Desafios ----------
   // Em "code", {{?}} marca a lacuna que o visitante completa.
-  const CHALLENGES = [
+  const CHALLENGES_PT = [
     {
       id: "calc",
       file: "calculadora.py",
@@ -378,7 +381,238 @@
     },
   ];
 
-  const FINAL = { id: "final", name: "Pythonista de bolso", icon: "final", ach: "Você completou todos os desafios Python!" };
+
+  // Versão em inglês dos desafios (mesmas linhas, para os erros apontarem a linha certa)
+  const CHALLENGES_EN = [
+    {
+      id: "calc",
+      file: "calculator.py",
+      name: "Calculator",
+      stars: 1,
+      icon: "calc",
+      ach: "You learned to build a calculator in Python",
+      intro: "Let's build a <b>calculator</b>: the program asks for two numbers and an operation, then shows the result.",
+      steps: [
+        {
+          explain: "<code>input()</code> shows a question and reads what the person types, always as text. <code>float()</code> turns that text into a number (with decimals).",
+          code: 'n1 = float(input("First number: "))\nn2 = float(input("Second number: "))\n',
+        },
+        {
+          explain: "Now we read which operation to do. It stays as text, because we'll only compare it.",
+          code: 'op = input("Operation (+ - * /): ")\n\n',
+        },
+        {
+          explain: "<code>if</code> tests a condition. <code>elif</code> (\"else, if\") tests the next one. <code>==</code> checks whether two values are equal.",
+          code: 'if op == "+":\n    print(n1 + n2)\nelif op == "-":\n    print(n1 - n2)\n',
+        },
+        {
+          explain: "Time for multiplication. Fill in the blank:",
+          code: 'elif op == "{{?}}":\n    print(n1 * n2)\n',
+          quiz: { q: "Which symbol does Python use to <b>multiply</b>?", options: ["x", "*", "·"], answer: "*" },
+          after: "Yes! In Python, <code>*</code> multiplies and <code>/</code> divides.",
+        },
+        {
+          explain: "Finally, division. Notice the 4 spaces before <code>print</code>: that <b>indentation</b> tells Python what belongs to each <code>if</code>.",
+          code: 'elif op == "/":\n    print(n1 / n2)\n',
+        },
+      ],
+      ready: "Code ready! Click <b>▶ Run</b> and type the numbers in the terminal. Tip: try dividing by zero or typing a letter to see a real error.",
+      async run(t) {
+        const n1 = pyFloat(await t.input("First number: "), 1);
+        const n2 = pyFloat(await t.input("Second number: "), 2);
+        const op = await t.input("Operation (+ - * /): ");
+        let r;
+        if (op === "+") r = n1 + n2;
+        else if (op === "-") r = n1 - n2;
+        else if (op === "*") r = n1 * n2;
+        else if (op === "/") {
+          if (n2 === 0) throw new PyError("ZeroDivisionError", "float division by zero", 12);
+          r = n1 / n2;
+        } else {
+          t.hint(`Nothing showed up? The operation <code>${escapeHTML(op) || "(empty)"}</code> isn't + - * /, so no <code>if</code> was true. Run it again.`);
+          return false;
+        }
+        t.print(fmtFloat(r));
+        return true;
+      },
+    },
+    {
+      id: "sema",
+      file: "traffic_light.py",
+      name: "Traffic light",
+      stars: 2,
+      icon: "sema",
+      ach: "You learned to build a traffic light in Python",
+      intro: "Now a <b>traffic light</b>: the program goes through the three colors, one at a time, with a pause between them.",
+      steps: [
+        {
+          explain: "<code>import</code> brings in ready-made tools. The <code>time</code> module has functions for dealing with time.",
+          code: "import time\n\n",
+        },
+        {
+          explain: "A <b>list</b> stores several values in order, inside square brackets <code>[ ]</code>.",
+          code: 'colors = ["GREEN", "YELLOW", "RED"]\n\n',
+        },
+        {
+          explain: "Now we want to do something with <b>each color</b> in the list. Fill in the blank:",
+          code: "{{?}} color in colors:\n    print(color)\n    time.sleep(2)\n",
+          quiz: { q: "Which word <b>repeats</b> the block once for each item in the list?", options: ["if", "for", "def"], answer: "for" },
+          after: "Yes! <code>for</code> goes through each item. And <code>time.sleep(2)</code> pauses the program for 2 seconds.",
+        },
+      ],
+      ready: "Done! Click <b>▶ Run</b> and watch the traffic light change color.",
+      async run(t) {
+        const light = t.widget("sema");
+        for (const [color, pt] of [["GREEN", "VERDE"], ["YELLOW", "AMARELO"], ["RED", "VERMELHO"]]) {
+          t.print(color, "c-" + pt.toLowerCase());
+          light(pt);
+          await t.sleep(2000, 7);
+        }
+        return true;
+      },
+    },
+    {
+      id: "clock",
+      file: "clock.py",
+      name: "Clock",
+      stars: 3,
+      icon: "clock",
+      ach: "You learned to build a clock in Python",
+      intro: "Let's make a <b>digital clock</b> that shows the current time every second, nonstop.",
+      steps: [
+        {
+          explain: "<code>datetime</code> is the date and time module. With <code>from ... import</code> we take just the part we need.",
+          code: "import time\nfrom datetime import datetime\n\n",
+        },
+        {
+          explain: "<code>while True</code> repeats the block <b>forever</b>, until someone interrupts it. <code>datetime.now()</code> gets the current moment.",
+          code: "while True:\n    now = datetime.now()\n",
+        },
+        {
+          explain: "<code>strftime</code> formats the time as text. <code>%H</code> is the hours and <code>%S</code> the seconds. Fill in the blank:",
+          code: '    print(now.strftime("%H:{{?}}:%S"))\n',
+          quiz: { q: "What's the code for <b>minutes</b>?", options: ["%m", "%M", "%min"], answer: "%M" },
+          after: "Yes! Watch out for the trap: lowercase <code>%m</code> is the <b>month</b>.",
+        },
+        {
+          explain: "<code>time.sleep(1)</code> waits 1 second before repeating.",
+          code: "    time.sleep(1)\n",
+        },
+      ],
+      ready: "Done! Click <b>▶ Run</b>. Since it's a <code>while True</code>, it only stops when you press <b>■ Stop</b> (or Ctrl+C).",
+      async run(t) {
+        const show = t.widget("clock");
+        let ticks = 0;
+        try {
+          for (;;) {
+            const now = new Date();
+            const hms = [now.getHours(), now.getMinutes(), now.getSeconds()].map((n) => String(n).padStart(2, "0")).join(":");
+            t.print(hms);
+            show(hms);
+            ticks++;
+            await t.sleep(1000, 7);
+          }
+        } catch (e) {
+          if (e instanceof Stopped && ticks >= 2) t.successAfterStop = true;
+          throw e;
+        }
+      },
+    },
+    {
+      id: "guess",
+      file: "guess.py",
+      name: "Guess the number",
+      stars: 4,
+      icon: "guess",
+      ach: "You learned to build a guessing game in Python",
+      intro: "A <b>game</b>: the computer picks a number from 1 to 10 and you try to guess it, with \"higher\" or \"lower\" hints.",
+      steps: [
+        {
+          explain: "<code>random</code> picks numbers. <code>randint(1, 10)</code> chooses an integer from 1 to 10. We start the guess at 0.",
+          code: "import random\n\nsecret = random.randint(1, 10)\nguess = 0\n\n",
+        },
+        {
+          explain: "The game should go on <b>while</b> the guess is wrong. Fill in the blank:",
+          code: "while guess {{?}} secret:\n",
+          quiz: { q: "Which operator means <b>not equal</b>?", options: ["==", "=", "!="], answer: "!=" },
+          after: "Yes! <code>==</code> checks for equality, and <code>=</code> stores a value in a variable.",
+        },
+        {
+          explain: "<code>int()</code> turns the typed text into a whole number. Then we compare with <code>&lt;</code> and <code>&gt;</code> to give a hint.",
+          code: '    guess = int(input("Your guess (1-10): "))\n    if guess < secret:\n        print("Higher!")\n    elif guess > secret:\n        print("Lower!")\n\n',
+        },
+        {
+          explain: "When the <code>while</code> ends, it's because the guess matched the secret.",
+          code: 'print("You got it!")\n',
+        },
+      ],
+      ready: "Done! Click <b>▶ Run</b> and try to guess the number.",
+      async run(t) {
+        const secret = 1 + Math.floor(Math.random() * 10);
+        let guess = 0;
+        while (guess !== secret) {
+          guess = pyInt(await t.input("Your guess (1-10): "), 7);
+          if (guess < secret) t.print("Higher!");
+          else if (guess > secret) t.print("Lower!");
+        }
+        t.print("You got it!");
+        return true;
+      },
+    },
+    {
+      id: "cpf",
+      file: "cpf.py",
+      name: "CPF validator",
+      stars: 5,
+      icon: "cpf",
+      ach: "You learned to validate a CPF in Python",
+      intro: "The last one: a <b>CPF validator</b> (CPF is the Brazilian taxpayer ID). Its last two digits are calculated from the other nine; let's redo that math.",
+      steps: [
+        {
+          explain: "<code>def</code> creates a <b>function</b>: a named block we can reuse. This one calculates a check digit.",
+          code: "def check_digit(nums):\n    weight = len(nums) + 1\n    total = 0\n",
+        },
+        {
+          explain: "Each number is multiplied by a weight that keeps decreasing (10, 9, 8...). <code>+=</code> adds to the running total and <code>-=</code> subtracts.",
+          code: "    for n in nums:\n        total += n * weight\n        weight -= 1\n",
+        },
+        {
+          explain: "The CPF rule uses the <b>remainder</b> of the division by 11. Fill in the blank:",
+          code: "    remainder = total {{?}} 11\n    return 0 if remainder < 2 else 11 - remainder\n\n",
+          quiz: { q: "Which operator gives the <b>remainder</b> of a division?", options: ["/", "%", "//"], answer: "%" },
+          after: "Yes! <code>/</code> divides with decimals, <code>//</code> divides without them and <code>%</code> gives the remainder.",
+        },
+        {
+          explain: "This line keeps only the digits that were typed (ignoring dots and dashes) and turns each one into a number.",
+          code: 'cpf = input("CPF: ")\nnums = [int(c) for c in cpf if c.isdigit()]\n\n',
+        },
+        {
+          explain: "The 1st digit uses the first 9 numbers; the 2nd uses those 9 plus the 1st digit. If both match the end of the CPF, it's valid.",
+          code: 'd1 = check_digit(nums[:9])\nd2 = check_digit(nums[:9] + [d1])\n\nif len(nums) == 11 and nums[9:] == [d1, d2]:\n    print("Valid CPF!")\nelse:\n    print("Invalid CPF.")\n',
+        },
+      ],
+      ready: "Done! Click <b>▶ Run</b>. Try the sample CPF <code>529.982.247-25</code> and then change one digit. What you type never leaves your browser.",
+      async run(t) {
+        const cpf = await t.input("CPF: ");
+        const nums = [...cpf].filter((c) => /\d/.test(c)).map(Number);
+        const checkDigit = (ns) => {
+          let weight = ns.length + 1;
+          let total = 0;
+          for (const n of ns) { total += n * weight; weight -= 1; }
+          const remainder = total % 11;
+          return remainder < 2 ? 0 : 11 - remainder;
+        };
+        const d1 = checkDigit(nums.slice(0, 9));
+        const d2 = checkDigit(nums.slice(0, 9).concat([d1]));
+        const ok = nums.length === 11 && nums[9] === d1 && nums[10] === d2;
+        t.print(ok ? "Valid CPF!" : "Invalid CPF.", ok ? "c-verde" : "c-vermelho");
+        return true;
+      },
+    },
+  ];
+  const CHALLENGES = EN ? CHALLENGES_EN : CHALLENGES_PT;
+
+  const FINAL = { id: "final", name: tr("Pythonista de bolso", "Pocket Pythonista"), icon: "final", ach: tr("Você completou todos os desafios Python!", "You completed all the Python challenges!") };
 
   // ---------- Progresso (localStorage, opcional) ----------
   const KEY = "rbf-python-v1";
@@ -501,7 +735,7 @@
     skipTyping = false;
     el.quiz.innerHTML = "";
     el.tab.textContent = ch.file;
-    el.title.textContent = `${ch.file} — desafios-python — Visual Studio Code`;
+    el.title.textContent = `${ch.file} — ${tr("desafios-python", "python-challenges")} — Visual Studio Code`;
     el.err.textContent = "⊗ 0  ⚠ 0";
     clearTerminal();
     setWidget(null);
@@ -513,17 +747,17 @@
     if (progress[ch.id]) {
       typed = fullCode(ch);
       renderCode();
-      setTutor(`Você já concluiu este desafio! Rode de novo no <b>▶ Executar</b> ou refaça o tutorial.`);
+      setTutor(tr("Você já concluiu este desafio! Rode de novo no <b>▶ Executar</b> ou refaça o tutorial.", "You've already completed this challenge! Run it again with <b>▶ Run</b> or redo the tutorial."));
       el.run.disabled = false;
       el.skip.hidden = true;
-      setNext("Refazer ↺", true);
+      setNext(tr("Refazer ↺", "Redo ↺"), true);
     } else {
       typed = "";
       renderCode();
       setTutor(ch.intro);
       el.run.disabled = true;
       el.skip.hidden = true;
-      setNext("Começar ▶", true);
+      setNext(tr("Começar ▶", "Start ▶"), true);
     }
   }
 
@@ -546,7 +780,7 @@
     busy = true;
     skipTyping = false;
     el.skip.hidden = reduceMotion;
-    setNext("Próximo ▶", false);
+    setNext(tr("Próximo ▶", "Next ▶"), false);
     el.step.textContent = `${stepIdx + 1}/${ch.steps.length}`;
     setTutor(step.explain);
 
@@ -571,7 +805,7 @@
     busy = false;
     el.skip.hidden = true;
     if (stepIdx < ch.steps.length - 1) {
-      setNext("Próximo ▶", true);
+      setNext(tr("Próximo ▶", "Next ▶"), true);
     } else {
       addTutor(ch.ready);
       setNext("", false, false);
@@ -599,7 +833,7 @@
             b.classList.add("is-wrong");
             b.disabled = true;
             if (!el.quiz.querySelector(".quiz__hint")) {
-              el.quiz.insertAdjacentHTML("beforeend", '<p class="quiz__hint">Quase! Tente outra opção.</p>');
+              el.quiz.insertAdjacentHTML("beforeend", `<p class="quiz__hint">${tr("Quase! Tente outra opção.", "Almost! Try another option.")}</p>`);
             }
           }
         });
@@ -625,7 +859,7 @@
   }
 
   function prompt(cmd) {
-    const d = line(`<span class="term__ps">PS C:\\desafios&gt;</span> ${cmd ? escapeHTML(cmd) : ""}`);
+    const d = line(`<span class="term__ps">PS C:\\${FOLDER}&gt;</span> ${cmd ? escapeHTML(cmd) : ""}`);
     if (!cmd) d.classList.add("is-idle");
     return d;
   }
@@ -719,7 +953,8 @@
         } else if (e instanceof PyError) {
           traceback(e, ch);
           el.err.textContent = "⊗ 1  ⚠ 0";
-          addTutor(`Apareceu um <b>${e.type}</b>: é exatamente o erro que o Python de verdade mostraria. Rode de novo com outro valor.`);
+          addTutor(tr(`Apareceu um <b>${e.type}</b>: é exatamente o erro que o Python de verdade mostraria. Rode de novo com outro valor.`,
+            `You got a <b>${e.type}</b>: exactly the error real Python would show. Run it again with another value.`));
         } else {
           throw e;
         }
@@ -763,14 +998,14 @@
     renderAchievements();
     if (first) {
       unlockToast(ch.icon, ch.ach);
-      addTutor(`<b>Desafio concluído!</b> ${nextSuggestion(ch)}`);
+      addTutor(`<b>${tr("Desafio concluído!", "Challenge complete!")}</b> ${nextSuggestion(ch)}`);
       if (CHALLENGES.every((c) => progress[c.id]) && !progress.final) {
         progress.final = true;
         save();
         renderAchievements();
         setTimeout(() => {
           unlockToast(FINAL.icon, FINAL.ach, FINAL.name);
-          RBF.say("pythonista de bolso!!", 3000);
+          RBF.say(tr("pythonista de bolso!!", "pocket pythonista!!"), 3000);
         }, 2200);
       }
     }
@@ -778,8 +1013,8 @@
 
   function nextSuggestion(ch) {
     const nxt = CHALLENGES.find((c) => !progress[c.id]);
-    if (!nxt) return "Você completou todos os desafios!";
-    return `Próximo: <button type="button" class="tutor__link" data-open="${nxt.id}">${nxt.name} ${"★".repeat(nxt.stars)}</button>`;
+    if (!nxt) return tr("Você completou todos os desafios!", "You completed all the challenges!");
+    return `${tr("Próximo", "Next")}: <button type="button" class="tutor__link" data-open="${nxt.id}">${nxt.name} ${"★".repeat(nxt.stars)}</button>`;
   }
 
   let toastQueue = Promise.resolve();
@@ -787,7 +1022,7 @@
     toastQueue = toastQueue.then(() => new Promise((done) => {
       const d = document.createElement("div");
       d.className = "mc__toast";
-      d.innerHTML = `<span class="mc__icon">${iconSVG(icon)}</span><span><b class="mc__t">${escapeHTML(title || "Conquista desbloqueada!")}</b><span class="mc__d">${escapeHTML(text)}</span></span>`;
+      d.innerHTML = `<span class="mc__icon">${iconSVG(icon)}</span><span><b class="mc__t">${escapeHTML(title || tr("Conquista desbloqueada!", "Achievement unlocked!"))}</b><span class="mc__d">${escapeHTML(text)}</span></span>`;
       el.toasts.appendChild(d);
       chime();
       requestAnimationFrame(() => d.classList.add("is-in"));
@@ -833,7 +1068,7 @@
         aria-selected="${current && current.id === c.id}" data-open="${c.id}">
         <span class="qpick__i">${iconSVG(c.icon)}</span>
         <span class="qpick__n">${c.name}</span>
-        <span class="qpick__s">${progress[c.id] ? "✓ feito" : "★".repeat(c.stars)}</span>
+        <span class="qpick__s">${progress[c.id] ? tr("✓ feito", "✓ done") : "★".repeat(c.stars)}</span>
       </button>`).join("");
   }
 
@@ -844,7 +1079,7 @@
     el.ach.innerHTML = all.map((a) => `
       <li class="qach__item${progress[a.id] ? " is-got" : ""}">
         <span class="qach__icon">${iconSVG(a.icon)}</span>
-        <span><b>${a.name}</b><small>${progress[a.id] ? a.ach : a.id === "final" ? "Complete todos os desafios" : "Conclua o desafio para desbloquear"}</small></span>
+        <span><b>${a.name}</b><small>${progress[a.id] ? a.ach : a.id === "final" ? tr("Complete todos os desafios", "Complete every challenge") : tr("Conclua o desafio para desbloquear", "Finish the challenge to unlock")}</small></span>
       </li>`).join("");
     el.reset.hidden = got === 0;
   }

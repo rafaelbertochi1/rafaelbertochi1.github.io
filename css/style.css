@@ -164,6 +164,8 @@ a:hover { color: var(--amber); }
 }
 .nav__crt[aria-pressed="true"] { color: var(--green); border-color: var(--green); }
 .nav__direct { margin-left: 8px; }
+.nav__lang { margin-left: 8px; text-decoration: none; }
+.nav__lang:hover { color: var(--amber); border-color: var(--amber); }
 .nav__crt + .nav__crt { margin-left: 6px; }
 /* Modo direto: tudo aparece na hora */
 .direto .reveal { opacity: 1 !important; transform: none !important; }

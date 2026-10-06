@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rafael Bertochi · Back-end & Data</title>
+  <meta name="description" content="Rafael Bertochi: back-end and data engineering developer. Bots and data pipelines in Python, Playwright, PostgreSQL and Docker. Looking for a junior role in Back-end or Data Engineering.">
+  <meta name="theme-color" content="#0b0e14">
+  <meta property="og:title" content="Rafael Bertochi · Back-end & Data">
+  <meta property="og:description" content="I build bots and data pipelines in Python that take manual work out of the way.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rafaelbertochi1.github.io/en/">
+  <meta property="og:image" content="https://rafaelbertochi1.github.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Rafael Bertochi: back-end and data engineering, with the portfolio's pixel art robot">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://rafaelbertochi1.github.io/assets/og.png">
+  <link rel="canonical" href="https://rafaelbertochi1.github.io/en/">
+  <link rel="alternate" hreflang="pt-BR" href="https://rafaelbertochi1.github.io/">
+  <link rel="alternate" hreflang="en" href="https://rafaelbertochi1.github.io/en/">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=20261006151657">
+  <link rel="stylesheet" href="../css/quest.css?v=20261006151657">
+  <link rel="stylesheet" href="../css/companion.css?v=20261006151657">
+  <link rel="stylesheet" href="../css/cursor.css?v=20261006151657">
+  <script>
+    document.documentElement.classList.add('js');
+    try { if (localStorage.getItem('rbf-direto') === '1') document.documentElement.classList.add('direto'); } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Skip to content</a>
+
+  <!-- Tela de boot (só na primeira visita da sessão) -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <pre class="boot__log" id="bootLog"></pre>
+    <p class="boot__skip">Press any key to skip</p>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="nav__logo" href="#topo" aria-label="Home">
+        <span class="nav__sprite" data-sprite="robot" aria-hidden="true"></span>
+        <span>RAFAEL.DEV</span>
+      </a>
+      <nav aria-label="Sections">
+        <ul class="nav__links">
+          <li><a href="#missoes">Projects</a></li>
+          <li><a href="#ficha">About</a></li>
+          <li><a href="#jornada">Experience</a></li>
+          <li><a href="#python">Python</a></li>
+          <li><a href="#contato">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="nav__crt nav__lang" href="../" hreflang="pt-BR" lang="pt-BR" title="Versão em português">PT</a>
+      <button class="nav__crt nav__direct" id="directToggle" type="button" aria-pressed="false" title="Quick mode: turns off the intro, the building animations and the robots so you can read everything right away">QUICK</button>
+      <button class="nav__crt" id="crtToggle" type="button" aria-pressed="true" title="Turns the old screen effect on/off">CRT</button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- HERO -->
+    <section class="hero" id="topo">
+      <div class="wrap">
+        <div class="hud" aria-label="Status">
+          <span class="hud__item">LVL <b>21</b></span>
+          <span class="hud__item">CLASS <b>BACK-END + DATA</b></span>
+          <span class="hud__item hud__xp">
+            <span>XP</span>
+            <span class="xpbar" role="img" aria-label="Progress from intern to junior"><span class="xpbar__fill"></span></span>
+            <span class="hud__xplabel">INTERN → JUNIOR</span>
+          </span>
+        </div>
+
+        <h1 class="hero__name"><span>RAFAEL</span> <span>BERTOCHI</span></h1>
+
+        <p class="hero__role">Back-end · Data engineering · Python · SQL</p>
+
+        <p class="hero__pitch">
+          I build bots and data pipelines in Python: I extract information from web systems
+          and PDFs, then clean, validate and load it into databases, with no manual work along
+          the way. Today they run in production at my internship.
+        </p>
+
+        <p class="quest">
+          <span class="quest__tag">CURRENT QUEST</span>
+          <span>Land my first junior role in <strong>Back-end</strong> or <strong>Data Engineering</strong>.</span>
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#missoes">▶ See projects</a>
+          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="en-cv-backend-topo">↓ Résumé Back-end (PT)</a>
+          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="en-cv-dados-topo">↓ Résumé Data (PT)</a>
+        </div>
+
+        <ul class="social">
+          <li><a href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener" data-goatcounter-click="en-topo-github">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener" data-goatcounter-click="en-topo-linkedin">LinkedIn</a></li>
+          <li><a href="mailto:rafaelbertochi1@gmail.com" data-goatcounter-click="en-topo-email">E-mail</a></li>
+        </ul>
+      </div>
+
+      <div class="stage" id="stage">
+        <button class="bot" id="bot" type="button" aria-label="Rafael's robot. Click to make it talk.">
+          <span class="bot__bubble" id="botBubble" role="status" aria-live="polite"></span>
+          <span class="bot__sprite" id="botSprite" aria-hidden="true"></span>
+        </button>
+        <div class="ground" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section class="section" id="missoes">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">WORLD 1 · PROJECTS</p>
+          <h2 class="section__title">Main quests</h2>
+          <p class="section__lead">
+            Real projects from my internship, running in production. The repositories are portfolio
+            versions: I replaced company, system and bank names with generic ones.
+          </p>
+        </header>
+
+        <div class="cards cards--main">
+          <article class="card reveal">
+            <div class="card__top">
+              <span class="badge badge--live"><i></i>IN PRODUCTION</span>
+              <span class="card__num">1-1</span>
+            </div>
+            <h3 class="card__title">Inspection registration bot</h3>
+            <p class="card__desc">
+              Moves the status of inspections from an appraisal portal into the company's management
+              system: it exports the report, registers the proposals and assigns the responsible
+              engineer. All in a single command, on a schedule. It replaced a manual process.
+            </p>
+            <p class="card__loot">What I solved</p>
+            <ul class="list">
+              <li>Safeguards for a flow that affects payments: exact taxpayer ID (CPF) match, preview mode, re-check after every write, idempotency and deduplication.</li>
+              <li>Checks every cancelled inspection one by one before releasing the file. If the count doesn't match, the bot stops and warns instead of carrying on.</li>
+              <li>Filters selected by exact text, tested against the real lists of 22 and 33 statuses, plus handling of a virtually scrolled list.</li>
+              <li>Integration with internal HTTP endpoints and a tool I built to map screens, frames and selectors.</li>
+            </ul>
+            <ul class="chips" aria-label="Technologies">
+              <li>Python</li><li>Playwright</li><li>HTTP</li><li>Excel</li><li>Git</li>
+            </ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-a" target="_blank" rel="noopener" data-goatcounter-click="en-repo-robo-cadastro-banco-a">Repo · Bank A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-b" target="_blank" rel="noopener" data-goatcounter-click="en-repo-robo-cadastro-banco-b">Repo · Bank B ↗</a>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__top">
+              <span class="badge badge--live"><i></i>IN PRODUCTION</span>
+              <span class="card__num">1-2</span>
+            </div>
+            <h3 class="card__title">Property appraisal pipeline</h3>
+            <p class="card__desc">
+              Downloads property appraisal reports, extracts the data and photos from each PDF
+              and loads everything into PostgreSQL, validating the batch before any write.
+            </p>
+            <p class="card__loot">What I solved</p>
+            <ul class="list">
+              <li>Downloads straight from the platform's API, several PDFs at a time, falling back to the UI only when the API can't.</li>
+              <li>Validates the whole batch before writing: if anything points to a new PDF layout, nothing is written and a report comes out.</li>
+              <li>Measures its own accuracy: compares ~20 database fields against a second source inside the PDF, on a sample of 500 reports.</li>
+              <li>Geocodes addresses without coordinates (OpenStreetMap → ZIP code → city), with a typical error of ~180 m across 200 tested reports.</li>
+            </ul>
+            <details class="arch">
+              <summary>See the architecture</summary>
+              <ol class="arch__flow" aria-label="Pipeline stages">
+                <li><b>Platform</b><small>appraisal reports as PDFs</small></li>
+                <li><b>Download</b><small>platform API, several at a time</small></li>
+                <li><b>Extraction</b><small>data with pdfplumber, photos with PyMuPDF</small></li>
+                <li class="is-gate"><b>Batch validation</b><small>new layout spotted? nothing is written</small></li>
+                <li><b>PostgreSQL</b><small>in Docker, via psycopg2</small></li>
+                <li><b>Geocoding</b><small>OpenStreetMap → ZIP code → city, in the background</small></li>
+              </ol>
+              <ul class="arch__stats">
+                <li><b>500</b><small>reports in the accuracy sample</small></li>
+                <li><b>~20</b><small>fields checked against a 2nd source in the PDF</small></li>
+                <li><b>~180 m</b><small>typical geocoding error</small></li>
+              </ul>
+            </details>
+            <ul class="chips" aria-label="Technologies">
+              <li>Python</li><li>PostgreSQL</li><li>Docker</li><li>pdfplumber</li><li>PyMuPDF</li><li>Multiprocessing</li>
+            </ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-a" target="_blank" rel="noopener" data-goatcounter-click="en-repo-pipeline-laudos-banco-a">Repo · Bank A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-b" target="_blank" rel="noopener" data-goatcounter-click="en-repo-pipeline-laudos-banco-b">Repo · Bank B ↗</a>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="subhead reveal">Side quests <span>· college and studies</span></h3>
+
+        <div class="cards cards--side">
+          <article class="card card--small reveal">
+            <div class="card__top">
+              <span class="badge badge--wip">PLANNING</span>
+              <span class="card__num">2-1</span>
+            </div>
+            <h4 class="card__title">Thesis · Real estate data pipeline</h4>
+            <p class="card__desc">
+              Collection of property listings, ETL, relational database and exploratory analysis.
+              Layered architecture with decisions recorded in ADRs, respecting privacy law (LGPD) and robots.txt.
+            </p>
+            <ul class="chips"><li>Python</li><li>SQLAlchemy</li><li>PostgreSQL</li><li>pytest</li></ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/Web_Scraper_TCC" target="_blank" rel="noopener" data-goatcounter-click="en-repo-Web_Scraper_TCC">Repo ↗</a>
+            </div>
+          </article>
+
+          <article class="card card--small reveal">
+            <div class="card__top">
+              <span class="badge">GROUP WORK</span>
+              <span class="card__num">2-2</span>
+            </div>
+            <h4 class="card__title">Database Lab</h4>
+            <p class="card__desc">
+              Relational modeling, DDL scripts, views, period-based DML loads and strategic
+              SQL queries, with a documented data dictionary and model.
+            </p>
+            <ul class="chips"><li>SQL</li><li>Oracle</li><li>PL/SQL</li></ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/Lab_Banco_Dados" target="_blank" rel="noopener" data-goatcounter-click="en-repo-Lab_Banco_Dados">Repo ↗</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="section" id="ficha">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">WORLD 2 · ABOUT</p>
+          <h2 class="section__title">Character sheet</h2>
+        </header>
+
+        <div class="sheet reveal">
+          <div class="sheet__id">
+            <div class="portrait" aria-hidden="true"><span data-sprite="robot" data-scale="big"></span></div>
+            <dl class="idlist">
+              <div><dt>Player</dt><dd>Rafael Bertochi Figueiredo</dd></div>
+              <div><dt>Class</dt><dd>Back-end · Data engineering</dd></div>
+              <div><dt>Base</dt><dd>Mogi das Cruzes, SP, Brazil</dd></div>
+              <div><dt>Guild</dt><dd>Fatec Mogi das Cruzes · Systems Analysis</dd></div>
+              <div><dt>Languages</dt><dd>Portuguese (native) · English B2 (TOEIC)</dd></div>
+            </dl>
+          </div>
+
+          <div class="sheet__bio">
+            <p>
+              I study Systems Analysis and Development and work as a data and development intern.
+              Day to day I build and maintain production automations in Python that connect web
+              systems, HTTP endpoints, files and databases, plus pipelines that extract, validate
+              and load data from PDF appraisal reports into PostgreSQL.
+            </p>
+            <p>
+              I work with Git, Docker and log-based debugging, and I use agentic AI (Claude Code),
+              carefully reviewing everything it generates before it reaches production. I have a
+              foundation in Java/OOP with Spring and in SQL. Before that, at COHAB SP, I analyzed
+              and processed large volumes of data.
+            </p>
+          </div>
+
+          <div class="sheet__stats">
+            <h3 class="mini">Attributes</h3>
+            <ul class="stats" id="stats">
+              <li data-lvl="3"><span class="stats__name">Python</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">SQL</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">Playwright</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">Java / OOP</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="2"><span class="stats__name">Docker</span><span class="stats__bar"></span><span class="stats__tag">BAS</span></li>
+              <li data-lvl="2"><span class="stats__name">HTML / CSS</span><span class="stats__bar"></span><span class="stats__tag">BAS</span></li>
+              <li data-lvl="1"><span class="stats__name">AWS</span><span class="stats__bar"></span><span class="stats__tag">INTRO</span></li>
+            </ul>
+          </div>
+
+          <div class="sheet__inv">
+            <h3 class="mini">Inventory</h3>
+            <ul class="inv">
+              <li>Python</li><li>Playwright</li><li>PostgreSQL</li><li>Docker</li>
+              <li>Git</li><li>pdfplumber</li><li>PyMuPDF</li><li>Java</li>
+              <li>Spring</li><li>PL/SQL</li><li>Power BI</li><li>Excel / VBA</li>
+              <li>C++</li><li>Claude Code</li>
+            </ul>
+            <div class="inv__info" id="invInfo" aria-live="polite">
+              <p class="inv__hint">Click an item to see where I've used it.</p>
+            </div>
+          </div>
+
+          <div class="sheet__moves">
+            <div class="move">
+              <h3 class="mini">Special move</h3>
+              <p>Turning an hours-long manual process into a single command.</p>
+            </div>
+            <div class="move">
+              <h3 class="mini">Passive skill</h3>
+              <p>Nothing that touches payments runs without a preview and a re-check.</p>
+            </div>
+            <div class="move move--locked">
+              <h3 class="mini">Next skills</h3>
+              <ul class="locked">
+                <li>NestJS</li><li>TypeScript</li><li>Microservices</li><li>AWS</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIÊNCIA -->
+    <section class="section" id="jornada">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">WORLD 3 · EXPERIENCE</p>
+          <h2 class="section__title">Save points</h2>
+        </header>
+
+        <ol class="timeline">
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">Aug 2026 · present</p>
+              <h3 class="save__role">Data and Development Intern</h3>
+              <p class="save__org">Uono Sanchez</p>
+              <ul class="list">
+                <li>Python and Playwright bots that export reports, register proposals and assign the responsible engineer across two web systems, on a schedule.</li>
+                <li>Automated the monthly billing for a banking client: reading PDF reports (including scanned ones), classifying them by business rules and validating each line against the price table.</li>
+                <li>Investigated and fixed production bugs from logs and tuned performance (headless mode, wait times via environment variables).</li>
+                <li>Git with branches and technical documentation for every project in a README.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">Jan 2025 · Feb 2026</p>
+              <h3 class="save__role">Data Analysis and Processing Intern</h3>
+              <p class="save__org">COHAB SP</p>
+              <ul class="list">
+                <li>Analyzed and processed large volumes of data for housing credit management and recovery.</li>
+                <li>Automated recurring tasks with advanced Excel, macros and VBA.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">Aug 2024 · Dec 2027 (expected)</p>
+              <h3 class="save__role">Associate Degree in Systems Analysis and Development</h3>
+              <p class="save__org">Fatec Mogi das Cruzes</p>
+            </div>
+          </li>
+        </ol>
+
+        <h3 class="subhead reveal">Achievements unlocked <span>· courses and certificates</span></h3>
+        <ul class="trophies">
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Java Back-end with Spring AI</b><small>NTT DATA</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Java Immersive Course</b><small>Rocketseat</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Python</b><small>Santander Open Academy</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Databases for Developers: Foundations</b><small>Oracle</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Power BI Fundamentals</b><small>Santander Open Academy</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Network Security</b><small>Cisco</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Hardware Lab</b><small>Cisco</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>English B2</b><small>TOEIC</small></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DESAFIOS PYTHON -->
+    <section class="section" id="python">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">BONUS STAGE · PYTHON</p>
+          <h2 class="section__title">Learn the basics of Python</h2>
+          <p class="section__lead">
+            Five mini challenges, from easiest to hardest. The code gets typed in front of you,
+            the robot explains each part and you fill in the blanks. At the end, just run it in
+            the terminal and earn the achievement. Everything runs in your browser.
+          </p>
+        </header>
+
+        <div class="qpicker reveal" id="qPicker" role="tablist" aria-label="Challenges"></div>
+
+        <div class="vsc reveal" id="vsc">
+          <div class="vsc__title" aria-hidden="true">
+            <span class="vsc__menu">≡</span>
+            <span class="vsc__name" id="vscTitle">python-challenges — Visual Studio Code</span>
+            <span class="vsc__win"><i>—</i><i>▢</i><i>✕</i></span>
+          </div>
+
+          <div class="vsc__body">
+            <aside class="vsc__explorer" aria-label="Challenge files">
+              <p class="vsc__label">EXPLORER</p>
+              <p class="vsc__folder">▾ PYTHON-CHALLENGES</p>
+              <ul class="vsc__files" id="qFiles"></ul>
+            </aside>
+
+            <div class="vsc__editor">
+              <div class="vsc__tabs">
+                <span class="vsc__tab" id="qTab">calculator.py</span>
+                <button class="vsc__run" id="qRun" type="button" disabled title="Run Python file">▶ Run</button>
+              </div>
+              <div class="vsc__code" id="qCode" aria-label="Challenge code"></div>
+            </div>
+
+            <aside class="vsc__tutor" aria-live="polite">
+              <div class="tutor__head">
+                <span class="tutor__bot" data-sprite="robot" aria-hidden="true"></span>
+                <span>TUTOR</span>
+                <span class="tutor__step" id="qStep"></span>
+              </div>
+              <div class="tutor__body" id="qTutor"></div>
+              <div class="tutor__quiz" id="qQuiz"></div>
+              <div class="tutor__actions">
+                <button class="qbtn qbtn--ghost" id="qSkip" type="button">⏩ Skip typing</button>
+                <button class="qbtn" id="qNext" type="button">Start ▶</button>
+              </div>
+            </aside>
+
+            <div class="vsc__panel">
+              <div class="vsc__ptabs" aria-hidden="true">
+                <span>PROBLEMS</span><span>OUTPUT</span><span class="is-on">TERMINAL</span>
+                <button class="vsc__stop" id="qStop" type="button" hidden>■ Stop (Ctrl+C)</button>
+              </div>
+              <div class="term" id="qTerm" role="log" aria-label="Terminal"></div>
+              <div class="qwidget" id="qWidget" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="vsc__status" aria-hidden="true">
+            <span>⎇ main</span>
+            <span id="qStatusErr">⊗ 0  ⚠ 0</span>
+            <span class="vsc__spacer"></span>
+            <span id="qPos">Ln 1, Col 1</span>
+            <span>UTF-8</span>
+            <span>Python 3.12</span>
+          </div>
+        </div>
+
+        <h3 class="subhead reveal">Python achievements <span id="qCount">· 0/5</span></h3>
+        <ul class="qach" id="qAch"></ul>
+        <button class="qreset" id="qReset" type="button">Reset progress</button>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section section--contact" id="contato">
+      <div class="wrap">
+        <div class="continue reveal">
+          <p class="continue__title">CONTINUE?</p>
+          <p class="continue__count" id="countdown" aria-hidden="true">9</p>
+          <p class="continue__text">
+            I'm looking for my first junior role in Back-end or Data Engineering.
+            If you have an opportunity or just want to chat, reach out.
+          </p>
+          <div class="hero__cta continue__cta">
+            <a class="btn btn--primary" href="mailto:rafaelbertochi1@gmail.com" data-goatcounter-click="en-contato-email">▶ Send an email</a>
+            <a class="btn" href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener" data-goatcounter-click="en-contato-linkedin">LinkedIn</a>
+            <a class="btn" href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener" data-goatcounter-click="en-contato-github">GitHub</a>
+          </div>
+          <button class="copy" id="copyEmail" type="button">rafaelbertochi1@gmail.com <span>[copy]</span></button>
+          <p class="cvlinks">
+            Résumé (in Portuguese):
+            <a href="../assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="en-cv-backend-contato">Back-end ↓</a>
+            <a href="../assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="en-cv-dados-contato">Data Engineering ↓</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p>© 2026 Rafael Bertochi · Made pixel by pixel.</p>
+      <p class="footer__hint">Tip: ↑ ↑ ↓ ↓ ← → ← → B A</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="mc" id="mcToasts" aria-live="polite"></div>
+
+  <script src="../js/main.js?v=20261006151657"></script>
+  <script src="../js/name.js?v=20261006151657"></script>
+  <script src="../js/build.js?v=20261006151657"></script>
+  <script src="../js/quest.js?v=20261006151657"></script>
+  <script src="../js/companion.js?v=20261006151657"></script>
+  <script src="../js/cursor.js?v=20261006151657"></script>
+</body>
+</html>

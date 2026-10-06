@@ -9,6 +9,8 @@
   if (!RBF || !sheet || !("IntersectionObserver" in window)) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const EN = document.documentElement.lang === "en";
+  const t = (pt, en) => (EN ? en : pt);
   if (reduceMotion || document.documentElement.classList.contains("direto")) return;
 
   const ROBOTS = 5;
@@ -19,15 +21,15 @@
   const chunk = (arr, n) => arr.reduce((acc, el, i) => { if (i % n === 0) acc.push([]); acc[acc.length - 1].push(el); return acc; }, []);
 
   const JOBS = [
-    { els: q(".portrait"), color: "#5ce1e6", say: "instalando retrato..." },
-    ...q(".idlist > div").map((el, i) => ({ els: [el], color: "#ffcc4d", say: i === 0 ? "jogador: Rafael" : null })),
-    ...q(".sheet__bio p").map((el, i) => ({ els: [el], color: "#e6edf3", say: i === 0 ? "escrevendo a bio..." : null })),
+    { els: q(".portrait"), color: "#5ce1e6", say: t("instalando retrato...", "installing portrait...") },
+    ...q(".idlist > div").map((el, i) => ({ els: [el], color: "#ffcc4d", say: i === 0 ? t("jogador: Rafael", "player: Rafael") : null })),
+    ...q(".sheet__bio p").map((el, i) => ({ els: [el], color: "#e6edf3", say: i === 0 ? t("escrevendo a bio...", "writing the bio...") : null })),
     ...q(".stats li").map((el, i) => ({
       els: [el], color: "#5ce1e6", stat: true,
-      say: i === 0 ? "instalando Python..." : i === 1 ? "atributo SQL: OK" : null,
+      say: i === 0 ? t("instalando Python...", "installing Python...") : i === 1 ? t("atributo SQL: OK", "SQL attribute: OK") : null,
     })),
-    ...chunk(q(".inv li"), 4).map((els, i) => ({ els, color: "#ffcc4d", say: i === 0 ? "carregando inventário..." : null })),
-    ...q(".move").map((el, i) => ({ els: [el], color: "#7ee787", say: i === 0 ? "golpe especial: OK!" : null })),
+    ...chunk(q(".inv li"), 4).map((els, i) => ({ els, color: "#ffcc4d", say: i === 0 ? t("carregando inventário...", "loading inventory...") : null })),
+    ...q(".move").map((el, i) => ({ els: [el], color: "#7ee787", say: i === 0 ? t("golpe especial: OK!", "special move: OK!") : null })),
   ].filter((j) => j.els.length);
 
   // Estado inicial: peças em "planta baixa" e barras de atributo vazias
@@ -198,7 +200,7 @@
     const skip = document.createElement("button");
     skip.type = "button";
     skip.className = "crew__skip";
-    skip.textContent = "⏩ Pular montagem";
+    skip.textContent = t("⏩ Pular montagem", "⏩ Skip building");
     skip.addEventListener("click", () => finish(true));
     sheet.appendChild(skip);
 

@@ -5,6 +5,9 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const direto = document.documentElement.classList.contains("direto"); // modo direto (sem abertura e sem robôs)
+  // Idioma: a página /en/ tem <html lang="en">; t(pt, en) escolhe o texto certo
+  const EN = document.documentElement.lang === "en";
+  const t = (pt, en) => (EN ? en : pt);
 
   // ---------- Armazenamento (pode falhar em aba anônima) ----------
   const store = {
@@ -118,17 +121,17 @@
   const BOOT_LINES = [
     "RBF-BIOS v21.0  (c) 2026 Rafael Bertochi",
     "",
-    "Checando memória ........... OK",
-    "Carregando python.exe ...... OK",
-    "Carregando playwright ...... OK",
-    "Conectando ao postgres ..... OK",
-    "Conferindo CPF ............. OK",
+    t("Checando memória ........... OK", "Checking memory ............ OK"),
+    t("Carregando python.exe ...... OK", "Loading python.exe ......... OK"),
+    t("Carregando playwright ...... OK", "Loading playwright ......... OK"),
+    t("Conectando ao postgres ..... OK", "Connecting to postgres ..... OK"),
+    t("Conferindo CPF ............. OK", "Checking taxpayer ID ....... OK"),
     "",
-    "Iniciando RAFAEL.DEV",
+    t("Iniciando RAFAEL.DEV", "Starting RAFAEL.DEV"),
   ];
 
   if (window.matchMedia("(pointer: coarse)").matches) {
-    document.querySelector(".boot__skip").textContent = "Toque na tela para pular";
+    document.querySelector(".boot__skip").textContent = t("Toque na tela para pular", "Tap the screen to skip");
   }
 
   function runBoot(done) {
@@ -192,7 +195,19 @@
   const botSprite = document.getElementById("botSprite");
   const bubble = document.getElementById("botBubble");
 
-  const PHRASES = [
+  const PHRASES = EN ? [
+    "beep boop! running pipeline...",
+    "checking taxpayer ID... OK",
+    "0 duplicate submissions today",
+    "preview mode: nothing was sent",
+    "wanted: junior role!",
+    "git pull --autostash",
+    "SELECT * FROM coffee;",
+    "batch validated. safe to write.",
+    "robots.txt respected",
+    "tried the Python challenges?",
+    "scroll down and I'll fly along!",
+  ] : [
     "bip bop! rodando pipeline...",
     "conferindo CPF... OK",
     "0 envios duplicados hoje",
@@ -203,7 +218,7 @@
     "lote validado. pode gravar.",
     "robots.txt respeitado",
     "já jogou os desafios Python?",
-    "me acha no canto da tela!",
+    "rola a página que eu voo junto!",
   ];
 
   const BOT_W = 56;
@@ -373,7 +388,7 @@
     const lvl = Number(li.dataset.lvl) || 0;
     const bar = li.querySelector(".stats__bar");
     bar.setAttribute("role", "img");
-    bar.setAttribute("aria-label", `nível ${lvl} de 5`);
+    bar.setAttribute("aria-label", t(`nível ${lvl} de 5`, `level ${lvl} of 5`));
     for (let i = 0; i < 5; i++) {
       const cell = document.createElement("i");
       if (i < lvl) cell.className = "on";
@@ -382,7 +397,22 @@
   });
 
   // ---------- Inventário: onde cada tecnologia já foi usada ----------
-  const INV_INFO = {
+  const INV_INFO = EN ? {
+    "Python": "My main language at my internship at Uono Sanchez: registration bots, the appraisal pipeline and the monthly billing automation. It's also the base of my thesis.",
+    "Playwright": "Web automation for the bots I built at Uono Sanchez: login, filters, report exports and registering proposals across two systems, plus downloading reports in the pipeline.",
+    "PostgreSQL": "Database of the appraisal pipeline at Uono Sanchez: the data extracted from each PDF and the comparable properties go into their own tables, via psycopg2.",
+    "Docker": "At Uono Sanchez, runs the pipeline's PostgreSQL and Adminer with docker compose, so the environment works the same on any machine.",
+    "Git": "Version control with branches on every internship project at Uono Sanchez, with READMEs covering setup, usage and decisions. The public projects are on my GitHub.",
+    "pdfplumber": "At Uono Sanchez, reads the PDF appraisal reports: extracts address, areas, values and other fields to store in the database.",
+    "PyMuPDF": "At Uono Sanchez, extracts the photos from the reports (front view and photo report), each saved with a label taken from its caption.",
+    "Java": "Object-oriented programming in my Fatec classes and in the Rocketseat (Java Immersive) and NTT DATA courses.",
+    "Spring": "Studied in NTT DATA's Java Back-end with Spring AI course.",
+    "PL/SQL": "Fatec's Database Lab (group work): modeling, DDL, views, period-based loads and strategic queries on Oracle.",
+    "Power BI": "At COHAB SP, active use in productivity and billing dashboards. At Uono Sanchez, in productivity dashboards. I also took the Power BI Fundamentals course (Santander Open Academy).",
+    "Excel / VBA": "At COHAB SP, macros and VBA to automate the team's recurring tasks. At Uono Sanchez, automated a billing spreadsheet while preserving its formulas and validations.",
+    "C++": "Programming logic and data structures in my Fatec courses.",
+    "Claude Code": "Agentic AI in my day-to-day at Uono Sanchez, always carefully reviewing the generated code before it reaches production.",
+  } : {
     "Python": "Linguagem principal do meu estágio na Uono Sanchez: robôs de cadastro, pipeline de laudos e automação do faturamento mensal. Também é a base do meu TCC.",
     "Playwright": "Automação web dos robôs que criei na Uono Sanchez: login, filtros, exportação de relatórios e cadastro de propostas entre dois sistemas, além do download de laudos na pipeline.",
     "PostgreSQL": "Banco de dados da pipeline de laudos na Uono Sanchez: os dados extraídos de cada PDF e os imóveis comparativos são gravados em tabelas próprias, via psycopg2.",
@@ -419,7 +449,7 @@
         if (b) b.setAttribute("aria-pressed", "false");
       });
       if (already) {
-        invInfo.innerHTML = '<p class="inv__hint">Clique em um item para ver onde ele já foi usado.</p>';
+        invInfo.innerHTML = `<p class="inv__hint">${t("Clique em um item para ver onde ele já foi usado.", "Click an item to see where I've used it.")}</p>`;
         return;
       }
       li.classList.add("is-sel");
@@ -494,7 +524,7 @@
   // ---------- Copiar e-mail ----------
   document.getElementById("copyEmail").addEventListener("click", () => {
     const email = "rafaelbertochi1@gmail.com";
-    const ok = () => toast("E-mail copiado!");
+    const ok = () => toast(t("E-mail copiado!", "Email copied!"));
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(email).then(ok, () => toast(email));
     } else {
@@ -511,7 +541,7 @@
     if (konamiPos === KONAMI.length) {
       konamiPos = 0;
       const on = document.body.classList.toggle("party");
-      toast(on ? "Cheat ativado: +30 vidas!" : "Cheat desativado");
+      toast(on ? t("Cheat ativado: +30 vidas!", "Cheat on: +30 lives!") : t("Cheat desativado", "Cheat off"));
       if (on) say("modo festa!!", 2600);
     }
   });
@@ -526,7 +556,7 @@
     document.dispatchEvent(new CustomEvent("rbf:ready"));
     if (!reduceMotion) {
       requestAnimationFrame(tick);
-      setTimeout(() => say("oi! sou o Rafael, versão robô!", 2600), 700);
+      setTimeout(() => say(t("oi! sou o Rafael, versão robô!", "hi! I'm Rafael, robot edition!"), 2600), 700);
     } else {
       bot.style.transform = "translateX(0)";
     }
