@@ -84,12 +84,19 @@
   // ---------- Voo: o robô do topo decola e vira o companheiro ----------
   const heroBot = document.getElementById("bot");
   const heroSprite = document.getElementById("botSprite");
-  const fly = buddy.querySelector(".buddy__fly");
-  let state = "ground"; // ground | moving | air
+  const navEl = document.querySelector(".nav");
+  const size = () => buddy.offsetWidth || 52;
+  let state = "ground"; // ground | air
   let sprite = "";
   let talking = false;
   let flame = 0;
   let played = false;
+
+  // Posição atual (coordenadas da tela) e o "modo" que define para onde ele voa
+  const pos = { x: 0, y: 0 };
+  let mode = { kind: "perch" }; // perch | anchor | spot | lift | land
+  let facing = 1;
+  let looping = false;
 
   function setSprite(name) {
     if (sprite === name) return;
@@ -100,7 +107,7 @@
 
   // Chamas do jato piscando
   setInterval(() => {
-    if (state === "ground" || reduceMotion) return;
+    if (state === "ground" || reduceMotion || document.hidden) return;
     flame = 1 - flame;
     setSprite(talking ? "robotFlyTalk" : flame ? "robotFly" : "robotFly2");
   }, 140);
@@ -115,85 +122,142 @@
     buddy.classList.toggle("is-air", on);
   }
 
-  // Leva o robô de um ponto da tela até o canto (ou o caminho inverso), num arco de voo
-  function flight(from, reverse, done) {
-    const to = buddySprite.getBoundingClientRect();
-    const dx = from.left - to.left;
-    const dy = from.top - to.top;
-    const sc = from.width / to.width || 1;
-    const frames = [
-      { transform: `translate(${dx}px, ${dy}px) scale(${sc})`, offset: 0 },
-      { transform: `translate(${dx}px, ${dy - 50}px) scale(${sc})`, offset: 0.25 },
-      { transform: `translate(${dx * 0.35}px, ${Math.min(dy, 0) * 0.35 - 70}px) scale(${(sc + 1) / 2})`, offset: 0.65 },
-      { transform: "translate(0px, 0px) scale(1)", offset: 1 },
-    ];
-    if (reverse) frames.reverse().forEach((f) => { f.offset = 1 - f.offset; });
-    const anim = fly.animate(frames, { duration: 1100, easing: "ease-in-out", fill: "both" });
-    anim.onfinish = () => { anim.cancel(); done(); };
+  const navH = () => (navEl ? navEl.offsetHeight : 60);
+  const clampX = (x) => Math.max(8, Math.min(window.innerWidth - size() - 8, x));
+  const clampY = (y) => Math.max(navH() + 10, Math.min(window.innerHeight - size() - 10, y));
+  const isMobile = () => window.innerWidth < 720;
+
+  // Poleiro: canto/lateral direita, com um leve passeio no ar
+  function perchPoint(t) {
+    const s = size();
+    const wx = reduceMotion ? 0 : Math.sin(t / 1700) * 8;
+    const wy = reduceMotion ? 0 : Math.sin(t / 1100) * 14;
+    if (isMobile()) return { x: window.innerWidth - s - 14 + wx * 0.5, y: window.innerHeight - s - 20 + wy * 0.4 };
+    return { x: window.innerWidth - s - 30 + wx, y: window.innerHeight * 0.58 + wy };
   }
+
+  // Ao lado do texto de um título (ou em cima, se não couber)
+  function textRect(el) {
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    const rect = r.getBoundingClientRect();
+    return rect.width ? rect : el.getBoundingClientRect();
+  }
+  function anchorPoint(el) {
+    const r = textRect(el);
+    const s = size();
+    let x = r.right + 18;
+    let y = r.top + r.height / 2 - s / 2 - 4;
+    if (x > window.innerWidth - s - 8) { x = r.right - s; y = r.top - s - 12; }
+    return { x: clampX(x), y: clampY(y) };
+  }
+
+  function target(t) {
+    switch (mode.kind) {
+      case "anchor": {
+        // título fora da tela: volta para o poleiro em vez de ficar grudado na borda
+        const r = mode.el.getBoundingClientRect();
+        if (r.bottom < navH() + 10 || r.top > window.innerHeight - 40) return perchPoint(t);
+        return anchorPoint(mode.el);
+      }
+      case "spot":
+      case "lift": return mode.point;
+      case "land": {
+        const r = heroSprite.getBoundingClientRect();
+        return { x: r.left + (r.width - size()) / 2, y: r.top + r.height - size() };
+      }
+      default: return perchPoint(t);
+    }
+  }
+
+  let running = false;
+  function frame(t) {
+    if (state === "ground" || document.hidden) { running = false; return; }
+    const tg = target(t);
+    const k = reduceMotion ? 1 : mode.kind === "land" ? 0.14 : 0.075;
+    let dx = (tg.x - pos.x) * k;
+    let dy = (tg.y - pos.y) * k;
+    const d = Math.hypot(dx, dy);
+    if (!reduceMotion && d > 22) { dx *= 22 / d; dy *= 22 / d; }
+    pos.x += dx;
+    pos.y += dy;
+    if (Math.abs(dx) > 0.7) facing = dx > 0 ? 1 : -1;
+    buddy.style.transform = `translate(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px)`;
+    buddy.classList.toggle("is-left", facing < 0);
+    buddy.classList.toggle("say-left", pos.x < window.innerWidth / 2);
+    buddy.classList.toggle("say-below", pos.y < navH() + 110);
+    const left = Math.hypot(tg.x - pos.x, tg.y - pos.y);
+    if (mode.kind === "land" && left < 2) return touchdown();
+    if (mode.kind === "lift" && left < 8) mode = mode.next;
+    requestAnimationFrame(frame);
+  }
+  function run() {
+    if (running || state === "ground") return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) run(); });
 
   function takeoff() {
-    state = "moving";
-    lag = 0;
-    fly.style.transform = "";
-    const heroRect = heroSprite ? heroSprite.getBoundingClientRect() : null;
-    const from = heroRect && heroRect.bottom > 0
-      ? heroRect
-      : { left: window.innerWidth + 40, top: -80, width: 52 }; // chegou no meio da página: entra pelo alto
+    const s = size();
+    const r = heroSprite ? heroSprite.getBoundingClientRect() : null;
+    if (r && r.bottom > 0 && r.top < window.innerHeight) {
+      pos.x = r.left + (r.width - s) / 2;
+      pos.y = r.top + r.height - s;
+    } else {
+      pos.x = window.innerWidth + 20; // chegou no meio da página: entra pela lateral
+      pos.y = window.innerHeight * 0.3;
+    }
+    state = "air";
     heroAway(true);
     setVisible(true);
-    if (reduceMotion) return arrived();
-    flight(from, false, arrived);
-  }
-
-  function arrived() {
-    state = "air";
-    lastScrollY = window.scrollY;
-    check();
+    mode = { kind: "lift", point: { x: clampX(pos.x + 30), y: clampY(pos.y - 120) }, next: { kind: "perch" } };
+    run();
+    scheduleTrick();
   }
 
   function land() {
-    state = "moving";
     current = null;
     clearBubble();
-    fly.style.transform = "";
-    const finish = () => {
-      setVisible(false);
-      heroAway(false);
-      state = "ground";
-      check();
-    };
-    if (reduceMotion || !heroSprite) return finish();
-    flight(heroSprite.getBoundingClientRect(), true, finish);
+    clearTimeout(perchTimer);
+    mode = { kind: "land" };
   }
 
-  // Acompanha a rolagem com um leve "atraso", como se estivesse voando atrás de você
-  let lastScrollY = window.scrollY;
-  let lag = 0;
-  function follow() {
-    if (state === "air" && !reduceMotion) {
-      const y = window.scrollY;
-      const v = y - lastScrollY;
-      lastScrollY = y;
-      lag = Math.max(-36, Math.min(36, lag * 0.86 - v * 0.5));
-      fly.style.transform = Math.abs(lag) > 0.3 ? `translateY(${lag.toFixed(1)}px)` : "";
-    }
-    requestAnimationFrame(follow);
+  function touchdown() {
+    running = false;
+    state = "ground";
+    mode = { kind: "perch" };
+    setVisible(false);
+    heroAway(false);
+    clearTimeout(trickTimer);
   }
-  requestAnimationFrame(follow);
+
+  function loopTrick() {
+    if (looping || reduceMotion) return;
+    looping = true;
+    buddy.classList.add("is-loop");
+    setTimeout(() => { buddy.classList.remove("is-loop"); looping = false; }, 850);
+  }
 
   // ---------- Comentários sobre as seções ----------
   const SECTIONS = [
     { id: "missoes", lines: ["Esses robôs rodam em produção de verdade!", "Os repositórios estão no GitHub, dá uma olhada!"] },
-    { id: "ficha", lines: ["Meus primos montaram essa ficha!", "Repara nos atributos do Rafael!"] },
+    { id: "ficha", lines: ["Meus primos montaram essa ficha!", "Clica no inventário pra ver onde o Rafael usou cada coisa!"] },
     { id: "jornada", lines: ["Cada save point é uma fase da carreira.", "Do Excel com VBA aos robôs em Python!"] },
     { id: "python", lines: ["Bora aprender Python? Começa pela calculadora!", "Cada desafio tem uma conquista!"] },
     { id: "contato", end: true },
-  ].map((sec) => Object.assign(sec, { el: document.getElementById(sec.id), visits: 0 }));
+  ].map((sec) => Object.assign(sec, {
+    el: document.getElementById(sec.id),
+    title: document.querySelector(sec.id === "contato" ? "#contato .continue__title" : `#${sec.id} .section__title`),
+    visits: 0,
+  }));
 
   let current = null;
+  let pending = null;
+  let pendingTimer;
   let endTimer;
   let hopTimer;
+  let perchTimer;
 
   function bubble(text, ms) {
     clearTimeout(buddySay._t);
@@ -236,27 +300,90 @@
     return found;
   }
 
-  function comment() {
+  // Só reage se a pessoa ficar na seção por um instante (rolagem rápida não faz ele voar à toa)
+  function considerSection() {
     const sec = sectionNow();
-    if (sec === current) return;
+    if (sec === current) { pending = null; clearTimeout(pendingTimer); return; }
+    if (sec === pending) return;
+    pending = sec;
+    clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(() => {
+      if (pending === sectionNow()) comment(pending);
+      pending = null;
+    }, 650);
+  }
+
+  function comment(sec) {
     current = sec;
     clearBubble();
-    if (!sec || panelOpen) return;
+    clearTimeout(perchTimer);
+    if (!sec || panelOpen || state !== "air" || mode.kind === "land") { if (mode.kind === "anchor") mode = { kind: "perch" }; return; }
+    mode = sec.title ? { kind: "anchor", el: sec.title } : { kind: "perch" };
     if (sec.end) {
       bubble("Gostou? Chama o Rafael pra conversar!", 0);
-      endTimer = setTimeout(() => { if (current === sec && !panelOpen) challenge(); }, 2600);
+      endTimer = setTimeout(() => {
+        if (current === sec && !panelOpen) { loopTrick(); challenge(); }
+      }, 2600);
       return;
     }
-    bubble(sec.lines[sec.visits % sec.lines.length], 3800);
+    bubble(sec.lines[sec.visits % sec.lines.length], 4200);
     sec.visits++;
+    perchTimer = setTimeout(() => { if (current === sec && mode.kind === "anchor") mode = { kind: "perch" }; }, 4800);
+  }
+
+  // ---------- Graças para chamar atenção (quando está no poleiro) ----------
+  const CHIRPS = ["Psiu!", "Bip bop!", "Tô de olho!", "Tudo certo aí?", "Rolando junto!"];
+  const PEEKS = ["Olha isso aqui!", "Esse é dos bons!", "Repara nesse!"];
+  let trickTimer;
+
+  function visibleOf(selector) {
+    return Array.from(document.querySelectorAll(selector)).filter((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top > navH() + 40 && r.top < window.innerHeight - 140 && r.width > 0;
+    });
+  }
+
+  function doTrick() {
+    if (state !== "air" || mode.kind !== "perch" || talking || panelOpen || reduceMotion) return;
+    const s = size();
+    const roll = Math.random();
+    if (roll < 0.3) {
+      // atravessa a tela e volta
+      const y = clampY(pos.y - 40);
+      mode = { kind: "spot", point: { x: isMobile() ? 14 : 24, y } };
+      setTimeout(() => { if (mode.kind === "spot") mode = { kind: "perch" }; }, 1900);
+    } else if (roll < 0.55) {
+      loopTrick();
+      if (Math.random() < 0.5) bubble("Wheee!", 1400);
+    } else if (roll < 0.8) {
+      // voa até algo interessante que está na tela
+      const things = visibleOf(".card, .trophy, .save__body, .qach__item, .vsc, .sheet");
+      if (!things.length) { hop(); bubble(CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1800); return; }
+      const el = things[Math.floor(Math.random() * things.length)];
+      const r = el.getBoundingClientRect();
+      mode = { kind: "spot", point: { x: clampX(r.right - s - 6), y: clampY(r.top - s * 0.6) } };
+      setTimeout(() => { if (mode.kind === "spot") bubble(PEEKS[Math.floor(Math.random() * PEEKS.length)], 1800); }, 900);
+      setTimeout(() => { if (mode.kind === "spot") mode = { kind: "perch" }; }, 3000);
+    } else {
+      hop();
+      bubble(CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1800);
+    }
+  }
+
+  function scheduleTrick() {
+    clearTimeout(trickTimer);
+    trickTimer = setTimeout(() => {
+      doTrick();
+      if (state === "air") scheduleTrick();
+    }, 8000 + Math.random() * 6000);
   }
 
   function check() {
-    if (state === "moving") return;
     const y = window.scrollY;
-    if (state === "ground" && y > 60) return takeoff();
-    if (state === "air" && y < 20 && !panelOpen) return land();
-    if (state === "air") comment();
+    if (state === "ground") { if (y > 60) takeoff(); return; }
+    if (y < 20 && !panelOpen) { if (mode.kind !== "land") land(); return; }
+    if (mode.kind === "land") mode = { kind: "perch" }; // desistiu de voltar ao topo
+    considerSection();
   }
 
   window.addEventListener("scroll", check, { passive: true });
@@ -277,6 +404,25 @@
   let mistakeRate = 0.25;
   let streak = 0;        // >0 robô vencendo seguido, <0 visitante vencendo seguido
   let semVitoria = 0;    // partidas seguidas sem o visitante vencer
+
+  // Provocações quando o robô vence (não repete até usar todas)
+  const TAUNTS = [
+    "Ganhei! Quer revanche?",
+    "GG! Bip bop, venci.",
+    "Robô 1, humano 0.",
+    "Treinei isso no Python!",
+    "Nem precisei do minimax inteiro.",
+    "Fácil, fácil. Mais uma?",
+    "Meu código não tem bug. Hoje não.",
+    "Vou contar pros meus primos!",
+    "Calculei tudo. Ou foi sorte?",
+    "Vitória do robô! Tenta de novo?",
+  ];
+  let tauntBag = [];
+  function nextTaunt() {
+    if (!tauntBag.length) tauntBag = TAUNTS.slice().sort(() => Math.random() - 0.5);
+    return tauntBag.pop();
+  }
 
   function renderScore() {
     scoreEl.textContent = `VOCÊ ${score.voce}  ·  VELHA ${score.velha}  ·  ROBÔ ${score.robo}`;
@@ -307,6 +453,13 @@
   function robotChoice() {
     const empty = board.map((v, i) => (v ? null : i)).filter((i) => i !== null);
     if (empty.length === 9) return pick([0, 2, 4, 6, 8]); // abertura variada
+    // Se dá para ganhar agora, ganha sempre (robô que deixa passar parece bobo)
+    for (const i of empty) {
+      board[i] = "O";
+      const wins = winnerOf(board)?.who === "O";
+      board[i] = null;
+      if (wins) return i;
+    }
     if (Math.random() < mistakeRate) return pick(empty);    // erro de propósito
     let bestScore = -Infinity;
     let best = [];
@@ -456,7 +609,7 @@
     if (w.who === "O") {
       score.robo++;
       streak = streak > 0 ? streak + 1 : 1;
-      say(pick(["Ganhei! Revanche?", "GG! Dessa vez deu robô.", "Vitória do robô! Tenta de novo?"]));
+      say(nextTaunt());
     } else if (w.who === "X") {
       score.voce++;
       streak = streak < 0 ? streak - 1 : -1;
@@ -492,6 +645,9 @@
     panel.hidden = false;
     buddy.setAttribute("aria-expanded", "true");
     clearBubble();
+    clearTimeout(perchTimer);
+    mode = { kind: "spot", point: { x: window.innerWidth - size() - 20, y: window.innerHeight - size() - 18 } };
+    run();
     renderScore();
     requestAnimationFrame(() => panel.classList.add("is-on"));
     if (over) newGame();
@@ -505,6 +661,7 @@
     setTimeout(() => { if (!panelOpen) panel.hidden = true; }, 200);
     buddy.focus({ preventScroll: true });
     current = null; // volta a comentar a seção atual
+    mode = { kind: "perch" };
     if (played && state === "air") {
       bubble(pick(["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
       setTimeout(check, 2300);

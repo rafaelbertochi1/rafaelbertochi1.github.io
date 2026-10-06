@@ -444,6 +444,9 @@
 
   // ---------- Início ----------
   runBoot(() => {
+    // avisa os outros módulos (ex.: montagem do nome) que a abertura terminou
+    window.RBF.ready = true;
+    document.dispatchEvent(new CustomEvent("rbf:ready"));
     if (!reduceMotion) {
       requestAnimationFrame(tick);
       setTimeout(() => say("oi! sou o bot do Rafael", 2600), 700);

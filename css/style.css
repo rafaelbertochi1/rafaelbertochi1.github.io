@@ -233,6 +233,19 @@ a:hover { color: var(--amber); }
 }
 .hero__name span { display: inline-block; }
 
+/* Nome montado pelos robôs (js/name.js) */
+.hero__name.is-assembling { color: transparent; text-shadow: none; }
+.namebuild { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.namebuild__shadow { position: absolute; inset: 0; transform: translate(4px, 4px); }
+.namebuild__front { position: absolute; inset: 0; }
+.nb { position: absolute; display: block; background: var(--text); animation: nbDrop 0.22s steps(3); }
+.nb--sh { background: var(--cyan-dk); }
+@keyframes nbDrop { from { transform: translateY(-14px); opacity: 0.2; } }
+.namebuild.is-done .nb { opacity: 0; transition: opacity 0.35s steps(3); }
+.nbot { position: absolute; left: 0; top: 0; z-index: 2; filter: drop-shadow(2px 4px 0 rgba(0, 0, 0, 0.45)); }
+.nbot svg { width: 100%; height: 100%; }
+.nbot.is-left svg { transform: scaleX(-1); }
+
 .hero__role {
   font-family: var(--font-label);
   font-size: clamp(14px, 2.2vw, 19px);

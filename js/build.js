@@ -1,6 +1,7 @@
 /* Ficha do personagem montada por robozinhos.
    O conteúdo está no HTML desde o início; aqui só escondemos as peças
-   e uma equipe de robôs "encaixa" cada uma no lugar (~5 s, uma vez por visita). */
+   e uma equipe de robôs "encaixa" cada uma no lugar (~5 s, toda vez que a página abre;
+   depois dá para remontar com o botão "Montar de novo"). */
 (function () {
   "use strict";
 
@@ -9,9 +10,7 @@
   if (!RBF || !sheet || !("IntersectionObserver" in window)) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let alreadyBuilt = false;
-  try { alreadyBuilt = sessionStorage.getItem("sheet-built") === "1"; } catch (e) { /* ignora */ }
-  if (reduceMotion || alreadyBuilt) return;
+  if (reduceMotion) return;
 
   const ROBOTS = 5;
   const SPEED = 640;      // px por segundo
@@ -42,6 +41,7 @@
   let crew;
   let robots = [];
   let nextJob = 0;
+  let runId = 0;
 
   function rel(el) {
     const s = sheet.getBoundingClientRect();
@@ -174,16 +174,40 @@
     if (finished) return;
     finished = true;
     JOBS.forEach((j) => place(j, false));
-    try { sessionStorage.setItem("sheet-built", "1"); } catch (e) { /* ignora */ }
     const skipBtn = sheet.querySelector(".crew__skip");
     if (skipBtn) skipBtn.remove();
+    let doneOnce = false;
     const done = () => {
+      if (doneOnce) return;
+      doneOnce = true;
       sheet.classList.remove("is-building");
       if (crew) crew.remove();
+      addReplay();
     };
     if (skip) return done();
     Promise.all(robots.map(leave)).then(() => setTimeout(done, 200));
     setTimeout(done, 1600); // garantia caso a aba fique em segundo plano
+  }
+
+  // Depois de pronta, um botão permite ver a montagem de novo
+  function addReplay() {
+    if (sheet.querySelector(".crew__skip")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "crew__skip crew__replay";
+    btn.textContent = "↻ Montar de novo";
+    btn.addEventListener("click", () => {
+      btn.remove();
+      JOBS.forEach((j) => { j.done = false; j.els.forEach((el) => el.classList.remove("is-placed")); });
+      q(".stats__bar i[data-on]").forEach((i) => i.classList.remove("on"));
+      sheet.classList.add("is-building");
+      nextJob = 0;
+      finished = false;
+      started = false;
+      robots = [];
+      start();
+    });
+    sheet.appendChild(btn);
   }
 
   function start() {
@@ -201,9 +225,10 @@
     skip.addEventListener("click", () => finish(true));
     sheet.appendChild(skip);
 
+    const id = ++runId; // cada montagem tem seu próprio cronômetro
     robots = Array.from({ length: ROBOTS }, (_, i) => makeRobot(i));
-    Promise.all(robots.map((b, i) => worker(b, i * 140))).then(() => finish(false));
-    setTimeout(() => finish(false), DEADLINE);
+    Promise.all(robots.map((b, i) => worker(b, i * 140))).then(() => { if (id === runId) finish(false); });
+    setTimeout(() => { if (id === runId) finish(false); }, DEADLINE);
   }
 
   const io = new IntersectionObserver((entries) => {
