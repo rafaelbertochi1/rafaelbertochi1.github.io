@@ -304,6 +304,60 @@
     }
   });
 
+  // ---------- Inventário: onde cada tecnologia já foi usada ----------
+  const INV_INFO = {
+    "Python": "Linguagem principal do meu estágio na Uono Sanchez: robôs de cadastro, pipeline de laudos e automação do faturamento mensal. Também é a base do meu TCC.",
+    "Playwright": "Automação web dos robôs que criei na Uono Sanchez: login, filtros, exportação de relatórios e cadastro de propostas entre dois sistemas, além do download de laudos na pipeline.",
+    "PostgreSQL": "Banco de dados da pipeline de laudos na Uono Sanchez: os dados extraídos de cada PDF e os imóveis comparativos são gravados em tabelas próprias, via psycopg2.",
+    "Docker": "Na Uono Sanchez, sobe o PostgreSQL e o Adminer da pipeline de laudos com docker compose, para o ambiente funcionar igual em qualquer máquina.",
+    "Git": "Versionamento com branches em todos os projetos do estágio na Uono Sanchez, com README de instalação, uso e decisões. Os projetos públicos estão no meu GitHub.",
+    "pdfplumber": "Na Uono Sanchez, leitura dos laudos de avaliação em PDF: extrai endereço, áreas, valores e outros campos para gravar no banco.",
+    "PyMuPDF": "Na Uono Sanchez, extração das fotos dos laudos (fachada e relatório fotográfico), cada uma salva com um rótulo tirado da legenda.",
+    "Java": "Programação orientada a objetos nas aulas da Fatec e nos cursos da Rocketseat (Imersivo de Java) e da NTT DATA.",
+    "Spring": "Estudado no curso Backend Java com Spring AI, da NTT DATA.",
+    "PL/SQL": "Laboratório de Banco de Dados da Fatec (em grupo): modelagem, DDL, views, cargas por período e consultas estratégicas no Oracle.",
+    "Power BI": "Na COHAB SP, uso ativo em dashboards de produtividade e de faturamento. Na Uono Sanchez, em dashboards de produtividade. Também fiz o curso de Fundamentos do Power BI (Santander Open Academy).",
+    "Excel / VBA": "Na COHAB SP, macros e VBA para automatizar tarefas recorrentes da equipe. Na Uono Sanchez, automação de uma planilha de faturamento preservando fórmulas e validações.",
+    "C++": "Lógica de programação e estruturas de dados nas disciplinas da Fatec.",
+    "Claude Code": "IA agêntica no dia a dia do estágio na Uono Sanchez, sempre revisando com cuidado o código gerado antes de ir para produção.",
+  };
+  const invInfo = document.getElementById("invInfo");
+  const invItems = Array.from(document.querySelectorAll(".inv li"));
+  invItems.forEach((li) => {
+    const name = li.textContent.trim();
+    if (!INV_INFO[name]) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "inv__btn";
+    btn.textContent = name;
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-controls", "invInfo");
+    li.textContent = "";
+    li.appendChild(btn);
+    btn.addEventListener("click", () => {
+      const already = li.classList.contains("is-sel");
+      invItems.forEach((other) => {
+        other.classList.remove("is-sel");
+        const b = other.querySelector(".inv__btn");
+        if (b) b.setAttribute("aria-pressed", "false");
+      });
+      if (already) {
+        invInfo.innerHTML = '<p class="inv__hint">Clique em um item para ver onde ele já foi usado.</p>';
+        return;
+      }
+      li.classList.add("is-sel");
+      btn.setAttribute("aria-pressed", "true");
+      invInfo.innerHTML = "";
+      const title = document.createElement("p");
+      title.className = "inv__name";
+      title.textContent = name;
+      const text = document.createElement("p");
+      text.className = "inv__text";
+      text.textContent = INV_INFO[name];
+      invInfo.append(title, text);
+    });
+  });
+
   // ---------- Reveal ----------
   const reveals = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !reduceMotion) {

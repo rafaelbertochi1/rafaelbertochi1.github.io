@@ -504,6 +504,32 @@ a:hover { color: var(--amber); }
   color: var(--text);
 }
 .inv li:hover { box-shadow: inset 0 0 0 2px var(--amber); color: var(--amber); }
+.inv li:has(.inv__btn) { padding: 0; }
+.inv__btn {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 6px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.inv li.is-sel { box-shadow: inset 0 0 0 2px var(--amber); color: var(--ink); background: var(--amber); }
+.inv__info {
+  margin-top: 12px;
+  min-height: 92px;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  box-shadow: inset 0 0 0 2px var(--line);
+}
+.inv__info p { margin: 0; }
+.inv__hint { font-size: 13px; color: var(--muted); }
+.inv__hint::before { content: "▸ "; color: var(--amber); }
+.inv__name { font-family: var(--font-label); font-size: 13px; text-transform: uppercase; color: var(--amber); margin-bottom: 4px !important; }
+.inv__text { font-size: 13.5px; line-height: 1.6; color: var(--text); }
 
 .move { padding: 16px 18px; background: var(--bg-2); box-shadow: inset 0 0 0 2px var(--line); }
 .move p { margin: 0; font-size: 14px; }
