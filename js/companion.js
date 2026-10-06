@@ -5,7 +5,7 @@
   "use strict";
 
   const RBF = window.RBF;
-  if (!RBF) return;
+  if (!RBF || document.documentElement.classList.contains("direto")) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const store = {

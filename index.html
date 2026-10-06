@@ -9,15 +9,27 @@
   <meta property="og:title" content="Rafael Bertochi · Back-end e Dados">
   <meta property="og:description" content="Construo robôs e pipelines de dados em Python que tiram trabalho manual do caminho.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rafaelbertochi1.github.io/">
+  <meta property="og:image" content="https://rafaelbertochi1.github.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Rafael Bertochi: back-end e engenharia de dados, com o robô em pixel art do portfólio">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://rafaelbertochi1.github.io/assets/og.png">
+  <link rel="canonical" href="https://rafaelbertochi1.github.io/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261006145110">
-  <link rel="stylesheet" href="css/quest.css?v=20261006145110">
-  <link rel="stylesheet" href="css/companion.css?v=20261006145110">
-  <link rel="stylesheet" href="css/cursor.css?v=20261006145110">
-  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="css/style.css?v=20261006150617">
+  <link rel="stylesheet" href="css/quest.css?v=20261006150617">
+  <link rel="stylesheet" href="css/companion.css?v=20261006150617">
+  <link rel="stylesheet" href="css/cursor.css?v=20261006150617">
+  <script>
+    document.documentElement.classList.add('js');
+    try { if (localStorage.getItem('rbf-direto') === '1') document.documentElement.classList.add('direto'); } catch (e) {}
+  </script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -43,6 +55,7 @@
           <li><a href="#contato">Contato</a></li>
         </ul>
       </nav>
+      <button class="nav__crt nav__direct" id="directToggle" type="button" aria-pressed="false" title="Modo direto: desliga a abertura, as montagens e os robôs para ler tudo na hora">DIRETO</button>
       <button class="nav__crt" id="crtToggle" type="button" aria-pressed="true" title="Liga/desliga o efeito de tela antiga">CRT</button>
     </div>
   </header>
@@ -79,14 +92,14 @@
 
         <div class="hero__cta">
           <a class="btn btn--primary" href="#missoes">▶ Ver projetos</a>
-          <a class="btn" href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download>↓ CV Back-end</a>
-          <a class="btn" href="assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download>↓ CV Dados</a>
+          <a class="btn" href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="cv-backend-topo">↓ CV Back-end</a>
+          <a class="btn" href="assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="cv-dados-topo">↓ CV Dados</a>
         </div>
 
         <ul class="social">
-          <li><a href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="mailto:rafaelbertochi1@gmail.com">E-mail</a></li>
+          <li><a href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener" data-goatcounter-click="topo-github">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener" data-goatcounter-click="topo-linkedin">LinkedIn</a></li>
+          <li><a href="mailto:rafaelbertochi1@gmail.com" data-goatcounter-click="topo-email">E-mail</a></li>
         </ul>
       </div>
 
@@ -134,8 +147,8 @@
               <li>Python</li><li>Playwright</li><li>HTTP</li><li>Excel</li><li>Git</li>
             </ul>
             <div class="card__links">
-              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-a" target="_blank" rel="noopener">Repo · Banco A ↗</a>
-              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-b" target="_blank" rel="noopener">Repo · Banco B ↗</a>
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-a" target="_blank" rel="noopener" data-goatcounter-click="repo-robo-cadastro-banco-a">Repo · Banco A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-b" target="_blank" rel="noopener" data-goatcounter-click="repo-robo-cadastro-banco-b">Repo · Banco B ↗</a>
             </div>
           </article>
 
@@ -156,12 +169,28 @@
               <li>Medição da própria taxa de acerto: compara ~20 campos do banco com uma segunda fonte dentro do PDF, numa amostra de 500 laudos.</li>
               <li>Geocodificação de endereços sem coordenada (OpenStreetMap → CEP → cidade), com erro típico de ~180 m em 200 laudos testados.</li>
             </ul>
+            <details class="arch">
+              <summary>Ver a arquitetura</summary>
+              <ol class="arch__flow" aria-label="Etapas da pipeline">
+                <li><b>Plataforma</b><small>laudos de avaliação em PDF</small></li>
+                <li><b>Download</b><small>API da plataforma, vários ao mesmo tempo</small></li>
+                <li><b>Extração</b><small>dados com pdfplumber, fotos com PyMuPDF</small></li>
+                <li class="is-gate"><b>Validação do lote</b><small>sinal de layout novo? nada é gravado</small></li>
+                <li><b>PostgreSQL</b><small>no Docker, via psycopg2</small></li>
+                <li><b>Geocodificação</b><small>OpenStreetMap → CEP → cidade, em segundo plano</small></li>
+              </ol>
+              <ul class="arch__stats">
+                <li><b>500</b><small>laudos na amostra de conferência</small></li>
+                <li><b>~20</b><small>campos comparados com uma 2ª fonte do PDF</small></li>
+                <li><b>~180 m</b><small>erro típico da geocodificação</small></li>
+              </ul>
+            </details>
             <ul class="chips" aria-label="Tecnologias">
               <li>Python</li><li>PostgreSQL</li><li>Docker</li><li>pdfplumber</li><li>PyMuPDF</li><li>Multiprocessing</li>
             </ul>
             <div class="card__links">
-              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-a" target="_blank" rel="noopener">Repo · Banco A ↗</a>
-              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-b" target="_blank" rel="noopener">Repo · Banco B ↗</a>
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-a" target="_blank" rel="noopener" data-goatcounter-click="repo-pipeline-laudos-banco-a">Repo · Banco A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-b" target="_blank" rel="noopener" data-goatcounter-click="repo-pipeline-laudos-banco-b">Repo · Banco B ↗</a>
             </div>
           </article>
         </div>
@@ -181,7 +210,7 @@
             </p>
             <ul class="chips"><li>Python</li><li>SQLAlchemy</li><li>PostgreSQL</li><li>pytest</li></ul>
             <div class="card__links">
-              <a href="https://github.com/rafaelbertochi1/Web_Scraper_TCC" target="_blank" rel="noopener">Repo ↗</a>
+              <a href="https://github.com/rafaelbertochi1/Web_Scraper_TCC" target="_blank" rel="noopener" data-goatcounter-click="repo-Web_Scraper_TCC">Repo ↗</a>
             </div>
           </article>
 
@@ -197,7 +226,7 @@
             </p>
             <ul class="chips"><li>SQL</li><li>Oracle</li><li>PL/SQL</li></ul>
             <div class="card__links">
-              <a href="https://github.com/rafaelbertochi1/Lab_Banco_Dados" target="_blank" rel="noopener">Repo ↗</a>
+              <a href="https://github.com/rafaelbertochi1/Lab_Banco_Dados" target="_blank" rel="noopener" data-goatcounter-click="repo-Lab_Banco_Dados">Repo ↗</a>
             </div>
           </article>
         </div>
@@ -434,15 +463,15 @@
             Se tiver uma oportunidade ou quiser trocar uma ideia, é só chamar.
           </p>
           <div class="hero__cta continue__cta">
-            <a class="btn btn--primary" href="mailto:rafaelbertochi1@gmail.com">▶ Mandar e-mail</a>
-            <a class="btn" href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener">LinkedIn</a>
-            <a class="btn" href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn btn--primary" href="mailto:rafaelbertochi1@gmail.com" data-goatcounter-click="contato-email">▶ Mandar e-mail</a>
+            <a class="btn" href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener" data-goatcounter-click="contato-linkedin">LinkedIn</a>
+            <a class="btn" href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener" data-goatcounter-click="contato-github">GitHub</a>
           </div>
           <button class="copy" id="copyEmail" type="button">rafaelbertochi1@gmail.com <span>[copiar]</span></button>
           <p class="cvlinks">
             Currículo:
-            <a href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download>Back-end ↓</a>
-            <a href="assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download>Engenharia de Dados ↓</a>
+            <a href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="cv-backend-contato">Back-end ↓</a>
+            <a href="assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="cv-dados-contato">Engenharia de Dados ↓</a>
           </p>
         </div>
       </div>
@@ -460,11 +489,11 @@
 
   <div class="mc" id="mcToasts" aria-live="polite"></div>
 
-  <script src="js/main.js?v=20261006145110"></script>
-  <script src="js/name.js?v=20261006145110"></script>
-  <script src="js/build.js?v=20261006145110"></script>
-  <script src="js/quest.js?v=20261006145110"></script>
-  <script src="js/companion.js?v=20261006145110"></script>
-  <script src="js/cursor.js?v=20261006145110"></script>
+  <script src="js/main.js?v=20261006150617"></script>
+  <script src="js/name.js?v=20261006150617"></script>
+  <script src="js/build.js?v=20261006150617"></script>
+  <script src="js/quest.js?v=20261006150617"></script>
+  <script src="js/companion.js?v=20261006150617"></script>
+  <script src="js/cursor.js?v=20261006150617"></script>
 </body>
 </html>

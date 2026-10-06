@@ -4,6 +4,7 @@
 
   if (!window.matchMedia("(pointer: fine)").matches) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (document.documentElement.classList.contains("direto")) return;
 
   const COLORS = ["#5ce1e6", "#ffcc4d", "#7ee787"];
   const MAX = 24;

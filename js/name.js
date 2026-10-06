@@ -10,6 +10,7 @@
   const hero = document.querySelector(".hero");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!RBF || !h1 || !hero || reduceMotion || !document.fonts) return;
+  if (document.documentElement.classList.contains("direto")) return;
 
   h1.classList.add("is-assembling");
   let finished = false;

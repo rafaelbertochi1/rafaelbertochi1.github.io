@@ -9,7 +9,7 @@
   if (!RBF || !sheet || !("IntersectionObserver" in window)) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduceMotion) return;
+  if (reduceMotion || document.documentElement.classList.contains("direto")) return;
 
   const ROBOTS = 5;
   const SPEED = 640;      // px por segundo

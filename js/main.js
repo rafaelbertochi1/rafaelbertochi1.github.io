@@ -4,6 +4,7 @@
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const direto = document.documentElement.classList.contains("direto"); // modo direto (sem abertura e sem robôs)
 
   // ---------- Armazenamento (pode falhar em aba anônima) ----------
   const store = {
@@ -131,7 +132,7 @@
   }
 
   function runBoot(done) {
-    if (reduceMotion || /noboot/.test(location.search) || store.get("sessionStorage", "booted")) return done();
+    if (reduceMotion || direto || /noboot/.test(location.search) || store.get("sessionStorage", "booted")) return done();
     store.set("sessionStorage", "booted", "1");
     boot.classList.add("is-on");
     document.body.style.overflow = "hidden";
@@ -160,6 +161,16 @@
 
     boot.addEventListener("click", finish);
     window.addEventListener("keydown", finish);
+  }
+
+  // ---------- Modo direto ----------
+  const directBtn = document.getElementById("directToggle");
+  if (directBtn) {
+    directBtn.setAttribute("aria-pressed", String(direto));
+    directBtn.addEventListener("click", () => {
+      store.set("localStorage", "rbf-direto", direto ? "0" : "1");
+      location.reload();
+    });
   }
 
   // ---------- CRT ----------
@@ -426,7 +437,7 @@
 
   // ---------- Reveal ----------
   const reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && !reduceMotion) {
+  if ("IntersectionObserver" in window && !reduceMotion && !direto) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
