@@ -1,0 +1,23 @@
+/* Cursores em pixel art (gerado por scripts/cursores.py, não edite à mão) */
+:root {
+  --cur-aim: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAbklEQVR42mNkIBFw84n8xyb+9dMbRlLMYWIYIEC2xYGXLzEEXr5Ef4sHzMejFo9aPGgtZmQYaSUXIy4fDNs4ZkEue/GB9bp6KPwv+ywZGBgYGHicjmOU4cSYMxrHo/l4tAUyWjuNWjxq8WjJBQcAy5AjaYhKbOEAAAAASUVORK5CYII=") 14 14, crosshair;
+  --cur-hand: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAAuUlEQVR42mNkwAG4+UT+M+ABXz+9YWQgAzAx0BmwEFLw9NkTFL60lAxFFtLdh8PfQhZyNeJKxYRS79DxIa7Ui+5zdB8Pfh/2z1xCkY8HzoeEyk5CYNXmAwwMDAwMYb4OeH088HGI7jJ0APPBkClpGNHjkJAPyQUDFodM2FxCaZ03OKunr5/eMJLbThkaqRRXiUNpqkVPDwNf0sDiEeZTmAsDL1+iyCKYuYOnEUWrVDvwqZTUPsagj0MAMl1EYoM2WXQAAAAASUVORK5CYII=") 9 2, pointer;
+  --cur-press: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAArUlEQVR42mNgGAVDHTDikuDmE/mPT+PXT28YybGQadD58OmzJyji0lIyDJT4nO4+ZCFXIy6fo8c9uo8Hvw/7Zy6hyMcD50NC+Y4QWLX5AAMDAwNDmK8DXh8PfByiuwwdwHxALhi4kgZXyUItMGBxyITNJYTKyyEVh0zIZR65ddzQqg/RSxxKUy16ehj4kgYWjzCfwlwYePkSRRbBzB34fEjrVDt4Wm3UqicHPA4BX7pEVShSQr8AAAAASUVORK5CYII=") 9 6, pointer;
+}
+
+@media (pointer: fine) {
+  html, body { cursor: var(--cur-aim); }
+  a, button, [role="button"], label, summary, select { cursor: var(--cur-hand); }
+  a:active, button:active, [role="button"]:active { cursor: var(--cur-press); }
+  button:disabled { cursor: not-allowed; }
+  input, textarea, .term__in { cursor: text; }
+}
+
+/* Rastro de pixels (js/cursor.js) */
+.trail { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
+.trail__px { position: absolute; display: block; opacity: 0; }
+.trail__px.is-on { animation: trailFade 0.5s steps(5) forwards; }
+@keyframes trailFade {
+  0% { opacity: 0.9; transform: none; }
+  100% { opacity: 0; transform: translateY(8px) scale(0.5); }
+}

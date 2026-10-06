@@ -196,12 +196,10 @@
   ];
 
   const BOT_W = 56;
-  const SPEED = 38; // px por segundo
   let x = 16;
   let dir = 1;
   let frame = 0;
   let talking = false;
-  let pausedUntil = 0;
   let lastFrameSwap = 0;
   let lastTime = 0;
   let stageVisible = true;
@@ -246,16 +244,22 @@
     bot.classList.add("is-jump");
     phraseIdx = (phraseIdx + 1) % PHRASES.length;
     say(PHRASES[phraseIdx]);
-    pausedUntil = performance.now() + 2200;
   });
 
   function bounds() {
     return { min: 16, max: Math.max(16, stage.clientWidth - 16 - BOT_W) };
   }
 
-  // Com mouse, o robô do topo acompanha o cursor para a direita e para a esquerda
+  // ---------- Movimento do robô do topo ----------
+  // Ele tem um "objetivo" (goal) e anda até lá acelerando e freando.
+  // Sozinho, escolhe lugares, pula e olha em volta; com o mouse se mexendo
+  // no topo, vai atrás do cursor.
+  let vx = 0;
+  let goal = x;
+  let nextDecision = 0;
   let mouseX = null;
   let mouseAt = 0;
+  let followedFar = 0;
   const heroSection = document.getElementById("topo");
   if (heroSection && window.matchMedia("(pointer: fine)").matches) {
     heroSection.addEventListener("mousemove", (e) => {
@@ -264,7 +268,33 @@
     });
     heroSection.addEventListener("mouseleave", () => { mouseX = null; });
   }
-  const FOLLOW_SPEED = 170; // px por segundo
+
+  function jump() {
+    bot.classList.remove("is-jump");
+    void bot.offsetWidth;
+    bot.classList.add("is-jump");
+  }
+
+  function decide(now) {
+    const b = bounds();
+    const r = Math.random();
+    if (r < 0.62) {
+      // anda até um lugar novo (nem muito perto, nem sempre longe)
+      const span = b.max - b.min;
+      let g = b.min + Math.random() * span;
+      if (Math.abs(g - x) < span * 0.15) g = x + (g < x ? -1 : 1) * span * 0.25;
+      goal = Math.max(b.min, Math.min(b.max, g));
+      nextDecision = now + 2600 + Math.random() * 2600;
+    } else if (r < 0.8) {
+      goal = x; // pulinho no lugar
+      jump();
+      nextDecision = now + 1200 + Math.random() * 1200;
+    } else {
+      goal = x; // olha para o outro lado
+      dir = -dir;
+      nextDecision = now + 1400 + Math.random() * 1600;
+    }
+  }
 
   function tick(now) {
     if (!lastTime) lastTime = now;
@@ -273,44 +303,50 @@
 
     if (stageVisible && !(window.RBF && window.RBF.heroAway)) {
       const b = bounds();
-      const following = mouseX !== null && now - mouseAt < 5000 && !talking;
-      const walking = now > pausedUntil && !talking;
+      const following = mouseX !== null && now - mouseAt < 2000;
 
-      if (following) {
-        const goal = Math.max(b.min, Math.min(b.max, mouseX));
-        const diff = goal - x;
-        if (Math.abs(diff) > 3) {
-          dir = diff > 0 ? 1 : -1;
-          x += dir * Math.min(Math.abs(diff), FOLLOW_SPEED * dt);
-          if (now - lastFrameSwap > 140) {
+      if (talking) {
+        goal = x;
+      } else if (following) {
+        const g = Math.max(b.min, Math.min(b.max, mouseX));
+        if (Math.abs(g - goal) > 1) followedFar += Math.abs(g - goal);
+        goal = g;
+        nextDecision = now + 1500;
+      } else if (now > nextDecision) {
+        decide(now);
+      }
+
+      // aceleração e freio suaves
+      const diff = goal - x;
+      const maxSpeed = following ? 230 : 95;
+      const want = Math.max(-maxSpeed, Math.min(maxSpeed, diff * 3.2));
+      vx += (want - vx) * (1 - Math.exp(-dt * 6));
+      if (Math.abs(diff) < 0.5 && Math.abs(vx) < 2) vx = 0;
+      x = Math.max(b.min, Math.min(b.max, x + vx * dt));
+
+      // chegou perto do cursor depois de correr: comemora com um pulinho
+      if (following && Math.abs(diff) < 4 && followedFar > 160) { followedFar = 0; jump(); }
+
+      const speed = Math.abs(vx);
+      if (speed > 6) dir = vx > 0 ? 1 : -1;
+      if (!talking) {
+        if (speed > 6) {
+          // as perninhas mexem mais rápido quando ele corre
+          const interval = Math.max(90, 260 - speed);
+          if (now - lastFrameSwap > interval) {
             frame = 1 - frame;
             lastFrameSwap = now;
             setBotSprite(frame ? "robotWalk" : "robot");
           }
         } else {
-          // chegou no cursor: fica olhando e piscando
           const blink = Math.floor(now / 160) % 18 === 0;
           setBotSprite(blink ? "robotBlink" : "robot");
         }
-      } else if (walking) {
-        x += dir * SPEED * dt;
-        if (x >= b.max) { x = b.max; dir = -1; }
-        if (x <= b.min) { x = b.min; dir = 1; }
-        if (Math.random() < 0.0025) pausedUntil = now + 1200 + Math.random() * 1800;
-
-        if (now - lastFrameSwap > 190) {
-          frame = 1 - frame;
-          lastFrameSwap = now;
-          setBotSprite(frame ? "robotWalk" : "robot");
-        }
-      } else if (!talking) {
-        // parado: pisca de vez em quando
-        const blink = Math.floor(now / 160) % 18 === 0;
-        setBotSprite(blink ? "robotBlink" : "robot");
       }
-
+      // balançadinha ao andar
+      const bob = speed > 6 && frame ? -2 : 0;
       bot.classList.toggle("is-flip", dir < 0);
-      bot.style.transform = `translateX(${Math.round(x - 16)}px)`;
+      bot.style.transform = `translate(${(x - 16).toFixed(1)}px, ${bob}px)`;
     }
     requestAnimationFrame(tick);
   }

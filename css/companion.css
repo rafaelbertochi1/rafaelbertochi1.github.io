@@ -13,7 +13,7 @@
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: var(--cur-hand);
   visibility: hidden;
   pointer-events: none;
 }
@@ -115,7 +115,7 @@
   background: none;
   color: var(--muted);
   font-size: 16px;
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .ttt__close:hover { color: var(--red); }
 .ttt__msg { min-height: 1.6em; margin: 6px 0 12px; font-family: var(--font-label); font-size: 13px; color: var(--cyan); }
@@ -134,7 +134,7 @@
   border: 0;
   background: var(--panel-2);
   box-shadow: inset 0 0 0 2px var(--line), inset -4px -4px 0 rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+  cursor: var(--cur-hand);
   opacity: 0;
   transform: scale(0.4);
 }
@@ -175,7 +175,7 @@
   font-size: 13px;
   text-transform: uppercase;
   box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .ttt__again:hover { background: var(--text); }
 .ttt__again[hidden] { display: none; }

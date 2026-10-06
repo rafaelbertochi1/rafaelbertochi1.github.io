@@ -423,10 +423,17 @@
     roamTimer = setTimeout(roam, ms);
   }
 
+  // Decola quando o "chão" do robô do topo chega na parte de cima da tela
+  // (assim dá para vê-lo andando antes) e pousa quando o chão volta para baixo.
+  const heroStage = document.getElementById("stage");
+  function groundTop() {
+    return heroStage ? heroStage.getBoundingClientRect().top / window.innerHeight : (window.scrollY > 60 ? -1 : 1);
+  }
+
   function check() {
-    const y = window.scrollY;
-    if (state === "ground") { if (y > 60) { takeoff(); considerSection(); } return; }
-    if (y < 20 && !panelOpen) { if (mode.kind !== "land") land(); return; }
+    const g = groundTop();
+    if (state === "ground") { if (g < 0.35) { takeoff(); considerSection(); } return; }
+    if (g > 0.5 && !panelOpen) { if (mode.kind !== "land") land(); return; }
     if (mode.kind === "land") { mode = { kind: "perch" }; scheduleRoam(800); }
     considerSection();
   }

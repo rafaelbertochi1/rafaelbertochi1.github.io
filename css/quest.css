@@ -62,7 +62,7 @@
   color: var(--vs-text);
   font: 13px/1.5 var(--font-body);
   text-align: left;
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .vsc__file:hover { background: #2a2d2e; }
 .vsc__file.is-on { background: #37373d; outline: 1px solid #007fd4; outline-offset: -1px; }
@@ -92,7 +92,7 @@
   color: #89d185;
   font: 600 13px var(--font-body);
   padding: 6px 10px;
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .vsc__run:hover:not(:disabled) { background: #2a2d2e; }
 .vsc__run:disabled { color: #5a5a5a; cursor: not-allowed; }
@@ -151,7 +151,7 @@
   font: inherit;
   color: #3794ff;
   text-decoration: underline;
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 
 .tutor__quiz:empty { display: none; }
@@ -167,7 +167,7 @@
   color: #fff;
   font: 600 15px var(--font-body);
   box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.35);
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .quiz__opt:hover:not(:disabled) { background: #45494e; }
 .quiz__opt.is-right { background: #2ea043; }
@@ -183,7 +183,7 @@
   background: var(--vs-btn);
   color: #fff;
   font: 600 13px var(--font-body);
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .qbtn:hover:not(:disabled) { background: #1177bb; }
 .qbtn:disabled { opacity: 0.45; cursor: default; }
@@ -210,7 +210,7 @@
   color: #ffb4b4;
   font: 600 12px var(--font-body);
   padding: 5px 10px;
-  cursor: pointer;
+  cursor: var(--cur-hand);
 }
 .vsc__stop:hover { background: #7a2525; }
 .vsc__stop[hidden] { display: none; }
@@ -295,7 +295,7 @@
   background: var(--panel);
   color: var(--text);
   text-align: left;
-  cursor: pointer;
+  cursor: var(--cur-hand);
   box-shadow: 0 0 0 2px var(--line);
 }
 .qpick.is-on { box-shadow: 0 0 0 2px var(--cyan); }
@@ -335,7 +335,7 @@
   font-family: var(--font-label);
   font-size: 12px;
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: var(--cur-hand);
   padding: 8px 4px;
 }
 .qreset:hover { color: var(--red); }
