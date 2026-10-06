@@ -24,10 +24,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20261006152023">
-  <link rel="stylesheet" href="../css/quest.css?v=20261006152023">
-  <link rel="stylesheet" href="../css/companion.css?v=20261006152023">
-  <link rel="stylesheet" href="../css/cursor.css?v=20261006152023">
+  <link rel="stylesheet" href="../css/style.css?v=20261006152239">
+  <link rel="stylesheet" href="../css/quest.css?v=20261006152239">
+  <link rel="stylesheet" href="../css/companion.css?v=20261006152239">
+  <link rel="stylesheet" href="../css/cursor.css?v=20261006152239">
   <script>
     document.documentElement.classList.add('js');
     try { if (localStorage.getItem('rbf-direto') === '1') document.documentElement.classList.add('direto'); } catch (e) {}
@@ -57,7 +57,11 @@
           <li><a href="#contato">Contact</a></li>
         </ul>
       </nav>
-      <a class="nav__crt nav__lang" href="../" hreflang="pt-BR" lang="pt-BR" title="Versão em português">PT</a>
+      <div class="lang" role="group" aria-label="Language / Idioma">
+        <span class="lang__globe" data-sprite="globe" aria-hidden="true"></span>
+        <a class="lang__opt" href="../" hreflang="pt-BR" lang="pt-BR" title="Português" data-lang="pt">PT</a>
+        <span class="lang__opt is-on" aria-current="page" title="English (current page)">EN</span>
+      </div>
       <button class="nav__crt nav__direct" id="directToggle" type="button" aria-pressed="false" title="Quick mode: turns off the intro, the building animations and the robots so you can read everything right away">QUICK</button>
       <button class="nav__crt" id="crtToggle" type="button" aria-pressed="true" title="Turns the old screen effect on/off">CRT</button>
     </div>
@@ -95,8 +99,8 @@
 
         <div class="hero__cta">
           <a class="btn btn--primary" href="#missoes">▶ See projects</a>
-          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="en-cv-backend-topo">↓ Résumé Back-end (PT)</a>
-          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="en-cv-dados-topo">↓ Résumé Data (PT)</a>
+          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="en-cv-backend-topo">↓ CV Back-end (PT)</a>
+          <a class="btn" href="../assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="en-cv-dados-topo">↓ CV Data (PT)</a>
         </div>
 
         <ul class="social">
@@ -333,10 +337,10 @@
               <h3 class="save__role">Data and Development Intern</h3>
               <p class="save__org">Uono Sanchez</p>
               <ul class="list">
-                <li>Python and Playwright bots that export reports, register proposals and assign the responsible engineer across two web systems, on a schedule.</li>
-                <li>Automated the monthly billing for a banking client: reading PDF reports (including scanned ones), classifying them by business rules and validating each line against the price table.</li>
-                <li>Investigated and fixed production bugs from logs and tuned performance (headless mode, wait times via environment variables).</li>
-                <li>Git with branches and technical documentation for every project in a README.</li>
+                <li>Python and Playwright bot that exports reports, registers proposals and assigns the responsible engineer.</li>
+                <li>Appraisal pipeline: API downloads, PDF extraction and loading into PostgreSQL with Docker.</li>
+                <li>Automated monthly billing for a banking client: reading PDF reports and validating them against the price table.</li>
+                <li>Safeguards on a payment-related flow and production bug fixes from logs.</li>
               </ul>
             </div>
           </li>
@@ -348,7 +352,7 @@
               <h3 class="save__role">Data Analysis and Processing Intern</h3>
               <p class="save__org">COHAB SP</p>
               <ul class="list">
-                <li>Analyzed and processed large volumes of data for housing credit management and recovery.</li>
+                <li>Analyzed and processed large volumes of housing credit data.</li>
                 <li>Automated recurring tasks with advanced Excel, macros and VBA.</li>
               </ul>
             </div>
@@ -472,7 +476,7 @@
           </div>
           <button class="copy" id="copyEmail" type="button">rafaelbertochi1@gmail.com <span>[copy]</span></button>
           <p class="cvlinks">
-            Résumé (in Portuguese):
+            CV (in Portuguese):
             <a href="../assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download data-goatcounter-click="en-cv-backend-contato">Back-end ↓</a>
             <a href="../assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf" download data-goatcounter-click="en-cv-dados-contato">Data Engineering ↓</a>
           </p>
@@ -492,11 +496,11 @@
 
   <div class="mc" id="mcToasts" aria-live="polite"></div>
 
-  <script src="../js/main.js?v=20261006152023"></script>
-  <script src="../js/name.js?v=20261006152023"></script>
-  <script src="../js/build.js?v=20261006152023"></script>
-  <script src="../js/quest.js?v=20261006152023"></script>
-  <script src="../js/companion.js?v=20261006152023"></script>
-  <script src="../js/cursor.js?v=20261006152023"></script>
+  <script src="../js/main.js?v=20261006152239"></script>
+  <script src="../js/name.js?v=20261006152239"></script>
+  <script src="../js/build.js?v=20261006152239"></script>
+  <script src="../js/quest.js?v=20261006152239"></script>
+  <script src="../js/companion.js?v=20261006152239"></script>
+  <script src="../js/cursor.js?v=20261006152239"></script>
 </body>
 </html>

@@ -164,8 +164,45 @@ a:hover { color: var(--amber); }
 }
 .nav__crt[aria-pressed="true"] { color: var(--green); border-color: var(--green); }
 .nav__direct { margin-left: 8px; }
-.nav__lang { margin-left: 8px; text-decoration: none; }
-.nav__lang:hover { color: var(--amber); border-color: var(--amber); }
+/* Seletor de idioma: globo + PT | EN, o atual aceso */
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 10px;
+  padding: 2px 2px 2px 6px;
+  box-shadow: 0 0 0 2px var(--line);
+}
+.lang__globe { width: 16px; height: 16px; margin-right: 4px; }
+.lang__opt {
+  font-family: var(--font-label);
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 8px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.lang__opt.is-on { background: var(--cyan); color: var(--ink); }
+a.lang__opt:hover, a.lang__opt:focus-visible { color: var(--ink); background: var(--amber); }
+
+/* Faixa que sugere o outro idioma (aparece uma vez) */
+.langhint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 8px var(--gutter);
+  background: var(--panel-2);
+  border-bottom: 2px solid var(--line);
+  font-family: var(--font-label);
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.langhint a { color: var(--ink); background: var(--amber); padding: 4px 10px; text-decoration: none; }
+.langhint button { border: 0; background: none; color: var(--muted); font: inherit; padding: 4px 8px; }
+.langhint button:hover { color: var(--red); }
 .nav__crt + .nav__crt { margin-left: 6px; }
 /* Modo direto: tudo aparece na hora */
 .direto .reveal { opacity: 1 !important; transform: none !important; }
@@ -801,6 +838,8 @@ body.party .hero__name { animation: hue 2s linear infinite; }
   .nav nav::-webkit-scrollbar { display: none; }
   .nav__links { justify-content: space-between; gap: 8px; }
   .nav__links a { font-size: 12px; white-space: nowrap; }
+  .nav__logo span:last-child { display: none; } /* no celular, só o robozinho: sobra espaço para os botões */
+  .lang { margin-left: auto; }
   .nav__links a.is-active::before { content: none; }
 }
 

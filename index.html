@@ -24,10 +24,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261006152023">
-  <link rel="stylesheet" href="css/quest.css?v=20261006152023">
-  <link rel="stylesheet" href="css/companion.css?v=20261006152023">
-  <link rel="stylesheet" href="css/cursor.css?v=20261006152023">
+  <link rel="stylesheet" href="css/style.css?v=20261006152239">
+  <link rel="stylesheet" href="css/quest.css?v=20261006152239">
+  <link rel="stylesheet" href="css/companion.css?v=20261006152239">
+  <link rel="stylesheet" href="css/cursor.css?v=20261006152239">
   <script>
     document.documentElement.classList.add('js');
     try { if (localStorage.getItem('rbf-direto') === '1') document.documentElement.classList.add('direto'); } catch (e) {}
@@ -57,7 +57,11 @@
           <li><a href="#contato">Contato</a></li>
         </ul>
       </nav>
-      <a class="nav__crt nav__lang" href="en/" hreflang="en" lang="en" title="English version">EN</a>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <span class="lang__globe" data-sprite="globe" aria-hidden="true"></span>
+        <span class="lang__opt is-on" aria-current="page" title="Português (página atual)">PT</span>
+        <a class="lang__opt" href="en/" hreflang="en" lang="en" title="English" data-lang="en">EN</a>
+      </div>
       <button class="nav__crt nav__direct" id="directToggle" type="button" aria-pressed="false" title="Modo direto: desliga a abertura, as montagens e os robôs para ler tudo na hora">DIRETO</button>
       <button class="nav__crt" id="crtToggle" type="button" aria-pressed="true" title="Liga/desliga o efeito de tela antiga">CRT</button>
     </div>
@@ -333,10 +337,10 @@
               <h3 class="save__role">Estagiário de Dados e Desenvolvimento</h3>
               <p class="save__org">Uono Sanchez</p>
               <ul class="list">
-                <li>Robôs em Python e Playwright que exportam relatórios, cadastram propostas e atribuem o engenheiro responsável entre dois sistemas web, com execução agendada.</li>
-                <li>Automação do faturamento mensal de um cliente bancário: leitura de laudos em PDF (inclusive digitalizados), classificação por regras de negócio e validação de cada linha contra a base de preços.</li>
-                <li>Investigação e correção de bugs em produção a partir de logs e otimização de desempenho (headless, tempos de espera por variáveis de ambiente).</li>
-                <li>Git com branches e documentação técnica de cada projeto em README.</li>
+                <li>Robô em Python e Playwright que exporta relatórios, cadastra propostas e atribui o engenheiro responsável.</li>
+                <li>Pipeline de laudos: download pela API, extração de PDFs e carga em PostgreSQL com Docker.</li>
+                <li>Faturamento mensal de um cliente bancário automatizado: leitura de laudos em PDF e validação contra a base de preços.</li>
+                <li>Travas em fluxo que impacta pagamentos e correção de bugs em produção a partir de logs.</li>
               </ul>
             </div>
           </li>
@@ -348,7 +352,7 @@
               <h3 class="save__role">Estagiário de Análise e Tratamento de Dados</h3>
               <p class="save__org">COHAB SP</p>
               <ul class="list">
-                <li>Análise e tratamento de grandes volumes de dados de gestão e recuperação de crédito imobiliário.</li>
+                <li>Análise e tratamento de grandes volumes de dados de crédito imobiliário.</li>
                 <li>Automação de tarefas recorrentes com Excel avançado, macros e VBA.</li>
               </ul>
             </div>
@@ -492,11 +496,11 @@
 
   <div class="mc" id="mcToasts" aria-live="polite"></div>
 
-  <script src="js/main.js?v=20261006152023"></script>
-  <script src="js/name.js?v=20261006152023"></script>
-  <script src="js/build.js?v=20261006152023"></script>
-  <script src="js/quest.js?v=20261006152023"></script>
-  <script src="js/companion.js?v=20261006152023"></script>
-  <script src="js/cursor.js?v=20261006152023"></script>
+  <script src="js/main.js?v=20261006152239"></script>
+  <script src="js/name.js?v=20261006152239"></script>
+  <script src="js/build.js?v=20261006152239"></script>
+  <script src="js/quest.js?v=20261006152239"></script>
+  <script src="js/companion.js?v=20261006152239"></script>
+  <script src="js/cursor.js?v=20261006152239"></script>
 </body>
 </html>

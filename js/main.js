@@ -54,6 +54,17 @@
     robotFly: variant(ROBOT_BASE, { 13: "...RY....YR..." }),
     robotFly2: variant(ROBOT_BASE, { 13: "...YY....YY..." }),
     robotFlyTalk: variant(ROBOT_BASE, { 0: "......RR......", 6: ".BLLMLLLLMLLB.", 7: ".BLLLMMMMLLLB.", 13: "...RY....YR..." }),
+    globe: [
+      "...CCC...",
+      ".CCLCLCC.",
+      ".CLLCLLC.",
+      "CCCCCCCCC",
+      "CLLLCLLLC",
+      "CCCCCCCCC",
+      ".CLLCLLC.",
+      ".CCLCLCC.",
+      "...CCC...",
+    ],
     floppy: [
       "CCCCCCCCC.",
       "CCSSSSKSCC",
@@ -97,7 +108,8 @@
 
   const svgCache = {};
   function sprite(name) {
-    if (!svgCache[name]) svgCache[name] = toSVG(SPRITES[name], name === "floppy" ? FLOPPY_COLORS : null);
+    const colors = name === "floppy" ? FLOPPY_COLORS : name === "globe" ? { C: "#5ce1e6", L: "#2a8f99" } : null;
+    if (!svgCache[name]) svgCache[name] = toSVG(SPRITES[name], colors);
     return svgCache[name];
   }
 
@@ -165,6 +177,33 @@
     boot.addEventListener("click", finish);
     window.addEventListener("keydown", finish);
   }
+
+  // ---------- Idioma ----------
+  // Lembra a escolha e, na primeira visita, sugere o outro idioma
+  // quando o navegador da pessoa usa outra língua.
+  document.querySelectorAll(".lang [data-lang]").forEach((a) => {
+    a.addEventListener("click", () => store.set("localStorage", "rbf-lang", a.dataset.lang));
+  });
+  (function suggestLanguage() {
+    if (store.get("localStorage", "rbf-lang") || store.get("localStorage", "rbf-langhint")) return;
+    const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""]).join(",").toLowerCase();
+    const prefersPt = /(^|,)pt/.test(langs);
+    if (EN === !prefersPt) return; // já está no idioma do navegador
+    const bar = document.createElement("div");
+    bar.className = "langhint";
+    bar.setAttribute("role", "region");
+    bar.setAttribute("aria-label", EN ? "Idioma" : "Language");
+    bar.innerHTML = EN
+      ? '<span lang="pt-BR">Este portfólio também está em português.</span><a href="../" lang="pt-BR" hreflang="pt-BR">Ver em português →</a><button type="button" lang="pt-BR">Fechar ✕</button>'
+      : '<span lang="en">This portfolio is also available in English.</span><a href="en/" lang="en" hreflang="en">Switch to English →</a><button type="button" lang="en">Close ✕</button>';
+    const nav = document.querySelector(".nav");
+    nav.parentNode.insertBefore(bar, nav.nextSibling);
+    bar.querySelector("a").addEventListener("click", () => store.set("localStorage", "rbf-lang", EN ? "pt" : "en"));
+    bar.querySelector("button").addEventListener("click", () => {
+      store.set("localStorage", "rbf-langhint", "1");
+      bar.remove();
+    });
+  })();
 
   // ---------- Modo direto ----------
   const directBtn = document.getElementById("directToggle");
