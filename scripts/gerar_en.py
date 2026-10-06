@@ -60,8 +60,10 @@ PAIRS = [
     ("<span>Encontrar minha primeira vaga júnior em <strong>Back-end</strong> ou <strong>Engenharia de Dados</strong>.</span>",
      "<span>Land my first junior role in <strong>Back-end</strong> or <strong>Data Engineering</strong>.</span>"),
     ("▶ Ver projetos", "▶ See projects"),
-    ("↓ CV Back-end</a>", "↓ CV Back-end (PT)</a>"),
-    ("↓ CV Dados</a>", "↓ CV Data (PT)</a>"),
+    ('href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf"', 'href="assets/cv/Rafael_Bertochi_Resume_Backend_EN.pdf"'),
+    ('href="assets/cv/Rafael_Bertochi_CV_Engenharia_Dados.pdf"', 'href="assets/cv/Rafael_Bertochi_Resume_Data_Engineering_EN.pdf"'),
+    ("↓ CV Back-end</a>", "↓ CV Back-end</a>"),
+    ("↓ CV Dados</a>", "↓ CV Data</a>"),
     ('aria-label="Robô do Rafael. Clique para ele falar."', 'aria-label="Rafael\'s robot. Click to make it talk."'),
 
     # projetos
@@ -227,10 +229,11 @@ PAIRS = [
     ("▶ Mandar e-mail", "▶ Send an email"),
     ("<span>[copiar]</span>", "<span>[copy]</span>"),
     ("""            Currículo:
-""", """            CV (in Portuguese):
+""", """            CV:
 """),
     ('data-goatcounter-click="cv-dados-contato">Engenharia de Dados ↓</a>', 'data-goatcounter-click="cv-dados-contato">Data Engineering ↓</a>'),
     ("© 2026 Rafael Bertochi · Feito pixel por pixel.", "© 2026 Rafael Bertochi · Made pixel by pixel."),
+    ("Visitas contadas de forma anônima, sem cookies.", "Visits are counted anonymously, without cookies."),
     ("Dica: ↑ ↑ ↓ ↓ ← → ← → B A", "Tip: ↑ ↑ ↓ ↓ ← → ← → B A"),
 ]
 
