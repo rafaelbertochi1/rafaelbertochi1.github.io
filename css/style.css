@@ -126,6 +126,7 @@ a:hover { color: var(--amber); }
   top: 0;
   z-index: 50;
   background: rgba(11, 14, 20, 0.92);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border-bottom: var(--px) solid var(--line);
 }
@@ -317,7 +318,7 @@ a:hover { color: var(--amber); }
   position: absolute;
   bottom: 70px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% + var(--shift, 0px)));
   white-space: nowrap;
   font-family: var(--font-label);
   font-size: 12px;
@@ -331,7 +332,7 @@ a:hover { color: var(--amber); }
 .bot__bubble::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: calc(50% - var(--shift, 0px));
   bottom: -8px;
   width: 8px;
   height: 8px;
@@ -633,6 +634,26 @@ body.party .hero__name { animation: hue 2s linear infinite; }
   .timeline::before { left: 14px; }
   .save__body { padding: 18px 16px 6px; }
   .btn { padding: 11px 16px; font-size: 13px; }
+  .chips li, .badge, .stats__tag, .inv li, .locked li, .trophy small,
+  .quest__tag, .card__num, .nav__crt, .card__loot, .footer p { font-size: 12px; }
+  .card__num { font-size: 10px; }
+  .nav nav { scrollbar-width: none; }
+  .nav nav::-webkit-scrollbar { display: none; }
+  .nav__links { justify-content: space-between; gap: 12px; }
+}
+
+/* Telas de toque: áreas de clique maiores e sem dica de teclado */
+@media (pointer: coarse) {
+  .nav__logo { padding: 11px 0; margin: -11px 0; }
+  .nav__links a,
+  .social a,
+  .card__links a {
+    display: inline-block;
+    padding: 14px 0;
+    margin: -14px 0;
+  }
+  .nav__crt { min-height: 40px; min-width: 44px; }
+  .footer__hint { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

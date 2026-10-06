@@ -122,6 +122,10 @@
     "Iniciando RAFAEL.DEV",
   ];
 
+  if (window.matchMedia("(pointer: coarse)").matches) {
+    document.querySelector(".boot__skip").textContent = "Toque na tela para pular";
+  }
+
   function runBoot(done) {
     if (reduceMotion || /noboot/.test(location.search) || store.get("sessionStorage", "booted")) return done();
     store.set("sessionStorage", "booted", "1");
@@ -208,6 +212,7 @@
   function say(text, ms) {
     bubble.textContent = text;
     bubble.classList.add("is-on");
+    keepBubbleOnScreen();
     talking = true;
     setBotSprite("robotTalk");
     clearTimeout(bubbleTimer);
@@ -215,6 +220,18 @@
       bubble.classList.remove("is-on");
       talking = false;
     }, ms || 2200);
+  }
+
+  // Mantém o balão inteiro dentro da tela quando o robô está perto da borda
+  function keepBubbleOnScreen() {
+    bubble.style.setProperty("--shift", "0px");
+    const margin = 8;
+    const b = bubble.getBoundingClientRect();
+    const limitRight = document.documentElement.clientWidth - margin;
+    let shift = 0;
+    if (b.left < margin) shift = margin - b.left;
+    else if (b.right > limitRight) shift = limitRight - b.right;
+    bubble.style.setProperty("--shift", Math.round(shift) + "px");
   }
 
   bot.addEventListener("click", () => {
