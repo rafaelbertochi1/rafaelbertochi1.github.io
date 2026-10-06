@@ -22,6 +22,14 @@ assets/cv/             currículo em PDF do botão "Baixar CV"
 
 Os sprites são desenhados como texto em `js/main.js` (`SPRITES`): cada letra é uma cor da `PALETTE` e `.` é transparente.
 
+## Antes de cada publicação
+
+```bash
+python scripts/versionar.py
+```
+
+Carimba uma versão nos links de CSS e JS do `index.html`, para o navegador dos visitantes baixar os arquivos novos (o GitHub Pages guarda cópias em cache por 10 minutos).
+
 ## Publicar (GitHub Pages)
 
 1. Crie o repositório `rafaelbertochi1.github.io` e suba estes arquivos na branch `main`.
