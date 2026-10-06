@@ -187,6 +187,7 @@
     "SELECT * FROM cafe;",
     "lote validado. pode gravar.",
     "robots.txt respeitado",
+    "já jogou os desafios Python?",
   ];
 
   const BOT_W = 56;
@@ -331,18 +332,27 @@
   const countEl = document.getElementById("countdown");
   let count = 9;
   let countTimer;
+  // Começa no 9 só quando o número está inteiro na tela (fora da borda de baixo)
+  // e volta para o 9 sempre que a pessoa sai da seção.
   function startCountdown() {
     if (countTimer || reduceMotion) return;
+    count = 9;
+    countEl.textContent = count;
     countTimer = setInterval(() => {
       count = count === 0 ? 9 : count - 1;
       countEl.textContent = count;
     }, 1000);
   }
-  function stopCountdown() { clearInterval(countTimer); countTimer = null; }
+  function stopCountdown() {
+    clearInterval(countTimer);
+    countTimer = null;
+    count = 9;
+    countEl.textContent = count;
+  }
   if ("IntersectionObserver" in window) {
     new IntersectionObserver((entries) => {
       entries[0].isIntersecting ? startCountdown() : stopCountdown();
-    }).observe(countEl);
+    }, { threshold: 1, rootMargin: "0px 0px -20% 0px" }).observe(countEl);
   }
 
   // ---------- Copiar e-mail ----------
@@ -369,6 +379,9 @@
       if (on) say("modo festa!!", 2600);
     }
   });
+
+  // Ferramentas compartilhadas com os desafios Python (js/quest.js)
+  window.RBF = { toSVG, sprite, say: (text, ms) => say(text, ms) };
 
   // ---------- Início ----------
   runBoot(() => {

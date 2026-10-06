@@ -1,0 +1,404 @@
+/* ==========================================================
+   Desafios Python: janela estilo VS Code + conquistas
+   ========================================================== */
+
+.vsc {
+  --vs-bg: #1e1e1e;
+  --vs-side: #252526;
+  --vs-title: #323233;
+  --vs-line: #3c3c3c;
+  --vs-text: #cccccc;
+  --vs-dim: #858585;
+  --vs-blue: #007acc;
+  --vs-btn: #0e639c;
+
+  margin: 0 var(--px) 8px;
+  background: var(--vs-bg);
+  color: var(--vs-text);
+  font-family: var(--font-body);
+  box-shadow: 0 0 0 4px var(--line), 10px 10px 0 4px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+/* Barra de título */
+.vsc__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 32px;
+  padding: 0 0 0 12px;
+  background: var(--vs-title);
+  font-size: 12px;
+  color: var(--vs-text);
+}
+.vsc__menu { color: var(--vs-dim); }
+.vsc__name { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vsc__win { display: flex; }
+.vsc__win i { font-style: normal; width: 40px; text-align: center; color: var(--vs-dim); line-height: 32px; }
+.vsc__win i:last-child:hover { background: #e81123; color: #fff; }
+
+/* Grade principal */
+.vsc__body {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 290px;
+  grid-template-areas:
+    "explorer editor tutor"
+    "explorer panel  tutor";
+}
+
+/* Explorador */
+.vsc__explorer { grid-area: explorer; background: var(--vs-side); padding: 10px 0; border-right: 1px solid var(--vs-line); }
+.vsc__label { margin: 0 0 8px 16px; font-size: 11px; letter-spacing: 1px; color: var(--vs-dim); }
+.vsc__folder { margin: 0 0 4px 10px; font-size: 11px; font-weight: 600; color: var(--vs-text); }
+.vsc__files { list-style: none; margin: 0; padding: 0; }
+.vsc__file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 10px 4px 22px;
+  border: 0;
+  background: none;
+  color: var(--vs-text);
+  font: 13px/1.5 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+.vsc__file:hover { background: #2a2d2e; }
+.vsc__file.is-on { background: #37373d; outline: 1px solid #007fd4; outline-offset: -1px; }
+.py { font-size: 9px; font-weight: 600; color: #3b8eea; background: #1e1e1e; padding: 0 3px; border: 1px solid #3b8eea; line-height: 1.4; }
+.vsc__fname { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vsc__fmeta { font-size: 10px; color: #e2c08d; letter-spacing: -1px; }
+
+/* Editor */
+.vsc__editor { grid-area: editor; min-width: 0; display: flex; flex-direction: column; }
+.vsc__tabs { display: flex; align-items: stretch; background: var(--vs-side); height: 36px; }
+.vsc__tab {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--vs-bg);
+  border-top: 2px solid #3794ff;
+  font-size: 13px;
+  color: #fff;
+}
+.vsc__tab::before { content: "py"; font-size: 9px; font-weight: 600; color: #3b8eea; margin-right: 8px; }
+.vsc__run {
+  margin-left: auto;
+  margin-right: 8px;
+  align-self: center;
+  border: 0;
+  background: transparent;
+  color: #89d185;
+  font: 600 13px var(--font-body);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.vsc__run:hover:not(:disabled) { background: #2a2d2e; }
+.vsc__run:disabled { color: #5a5a5a; cursor: not-allowed; }
+.vsc__run.is-ready { animation: pulse 1.2s steps(2) infinite; }
+@keyframes pulse { 50% { background: rgba(137, 209, 133, 0.18); } }
+
+.vsc__code {
+  height: 330px;
+  overflow: auto;
+  padding: 10px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  background: var(--vs-bg);
+}
+.ln { display: flex; min-width: max-content; }
+.ln__n { flex: none; width: 46px; padding-right: 18px; text-align: right; color: var(--vs-dim); user-select: none; }
+.ln__c { white-space: pre; color: #d4d4d4; padding-right: 16px; }
+.kw { color: #c586c0; }
+.kc { color: #569cd6; }
+.fn { color: #dcdcaa; }
+.va { color: #9cdcfe; }
+.st { color: #ce9178; }
+.nu { color: #b5cea8; }
+.cm { color: #6a9955; }
+.caret { display: inline-block; width: 2px; height: 1.15em; margin-left: 1px; vertical-align: text-bottom; background: #aeafad; animation: blink 1s steps(1) infinite; }
+.blank {
+  display: inline-block;
+  padding: 0 4px;
+  color: var(--amber);
+  background: rgba(255, 204, 77, 0.14);
+  outline: 1px dashed var(--amber);
+  animation: blink 1.2s steps(1) infinite;
+}
+
+/* Tutor (painel lateral) */
+.vsc__tutor {
+  grid-area: tutor;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--vs-side);
+  border-left: 1px solid var(--vs-line);
+  padding: 12px 14px 14px;
+}
+.tutor__head { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 1px; color: var(--vs-dim); margin-bottom: 10px; }
+.tutor__bot { width: 22px; height: 22px; }
+.tutor__step { margin-left: auto; color: #e2c08d; letter-spacing: 0; }
+.tutor__body { flex: 1; font-size: 13.5px; line-height: 1.65; }
+.tutor__body p { margin: 0 0 10px; }
+.tutor__body code, .tutor__quiz code { font-family: var(--font-body); color: #dcdcaa; background: #1e1e1e; padding: 0 4px; }
+.tutor__body b, .tutor__quiz b { color: #fff; }
+.tutor__link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: #3794ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tutor__quiz:empty { display: none; }
+.tutor__quiz { margin: 6px 0 12px; padding: 12px; background: #1e1e1e; box-shadow: inset 0 0 0 1px var(--amber); }
+.quiz__q { margin: 0 0 10px; font-size: 13.5px; }
+.quiz__opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.quiz__opt {
+  min-width: 56px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 0;
+  background: #3a3d41;
+  color: #fff;
+  font: 600 15px var(--font-body);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+.quiz__opt:hover:not(:disabled) { background: #45494e; }
+.quiz__opt.is-right { background: #2ea043; }
+.quiz__opt.is-wrong { background: #6e2a2a; color: #f5b5b5; animation: shake 0.3s steps(4); cursor: not-allowed; }
+.quiz__hint { margin: 10px 0 0; font-size: 12.5px; color: #e2c08d; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+.tutor__actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.qbtn {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  background: var(--vs-btn);
+  color: #fff;
+  font: 600 13px var(--font-body);
+  cursor: pointer;
+}
+.qbtn:hover:not(:disabled) { background: #1177bb; }
+.qbtn:disabled { opacity: 0.45; cursor: default; }
+.qbtn--ghost { background: transparent; color: var(--vs-text); box-shadow: inset 0 0 0 1px var(--vs-line); }
+.qbtn--ghost:hover { background: #2a2d2e; }
+.qbtn[hidden] { display: none; }
+
+/* Painel inferior: terminal */
+.vsc__panel {
+  grid-area: panel;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "ptabs ptabs" "term widget";
+  border-top: 1px solid var(--vs-line);
+  background: var(--vs-bg);
+}
+.vsc__ptabs { grid-area: ptabs; display: flex; align-items: center; gap: 18px; padding: 0 14px; height: 34px; font-size: 11px; letter-spacing: 1px; color: var(--vs-dim); }
+.vsc__ptabs .is-on { color: #e7e7e7; box-shadow: 0 1px 0 0 #e7e7e7; padding: 4px 0; }
+.vsc__stop {
+  margin-left: auto;
+  border: 0;
+  background: #5a1d1d;
+  color: #ffb4b4;
+  font: 600 12px var(--font-body);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.vsc__stop:hover { background: #7a2525; }
+.vsc__stop[hidden] { display: none; }
+
+.term {
+  grid-area: term;
+  height: 210px;
+  overflow: auto;
+  padding: 4px 14px 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #cccccc;
+}
+.term__line { white-space: pre-wrap; word-break: break-word; }
+.term__ps { color: #cccccc; }
+.term__in {
+  width: 12ch;
+  min-width: 8ch;
+  max-width: 60%;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  caret-color: #fff;
+  border-bottom: 1px dashed #5a5a5a;
+}
+.term__in:focus { border-bottom-color: var(--amber); }
+.term__typed { color: #fff; }
+.c-verde { color: #3fb950; font-weight: 600; }
+.c-amarelo { color: #d29922; font-weight: 600; }
+.c-vermelho { color: #f85149; font-weight: 600; }
+.c-err { color: #f48771; }
+.c-errhead { font-weight: 600; }
+.c-dim { color: var(--vs-dim); }
+
+/* Widgets visuais ao lado do terminal */
+.qwidget { grid-area: widget; display: none; }
+.qwidget.is-on { display: flex; align-items: center; justify-content: center; padding: 8px 18px; border-left: 1px solid var(--vs-line); }
+.tl { display: grid; gap: 8px; padding: 10px; background: #111; box-shadow: 0 0 0 3px #3a4256; }
+.tl i { width: 34px; height: 34px; background: #2b2b2b; transition: background 0.2s steps(2), box-shadow 0.2s steps(2); }
+.tl i[data-c="VERMELHO"].is-on { background: #f85149; box-shadow: 0 0 18px #f85149; }
+.tl i[data-c="AMARELO"].is-on { background: #e3b341; box-shadow: 0 0 18px #e3b341; }
+.tl i[data-c="VERDE"].is-on { background: #3fb950; box-shadow: 0 0 18px #3fb950; }
+.clk {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--green);
+  background: #0b0e14;
+  padding: 16px 14px;
+  box-shadow: 0 0 0 3px #3a4256;
+  text-shadow: 0 0 10px rgba(126, 231, 135, 0.6);
+}
+
+/* Barra de status */
+.vsc__status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 24px;
+  padding: 0 12px;
+  background: var(--vs-blue);
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.vsc__spacer { flex: 1; }
+
+/* Seletor de desafios (telas menores, quando o explorador some) */
+.qpicker { display: none; gap: 10px; margin: 0 var(--px) 18px; overflow-x: auto; padding: 4px 4px 8px; scrollbar-width: thin; }
+.qpick {
+  flex: none;
+  display: grid;
+  grid-template-columns: 26px auto;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 0 0 2px var(--line);
+}
+.qpick.is-on { box-shadow: 0 0 0 2px var(--cyan); }
+.qpick.is-done .qpick__s { color: var(--green); }
+.qpick__i { grid-row: span 2; width: 26px; height: 26px; display: flex; align-items: center; }
+.qpick__i svg { max-height: 26px; }
+.qpick__n { font-family: var(--font-label); font-size: 12px; text-transform: uppercase; white-space: nowrap; }
+.qpick__s { font-size: 11px; color: var(--amber); }
+
+/* Galeria de conquistas */
+.qach { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.qach__item {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--panel);
+  box-shadow: 0 0 0 2px var(--line);
+  margin: 2px;
+}
+.qach__icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; filter: grayscale(1) brightness(0.45); }
+.qach__icon svg { max-height: 36px; }
+.qach__item b { display: block; font-family: var(--font-label); font-weight: 400; font-size: 13px; text-transform: uppercase; color: var(--muted); }
+.qach__item small { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.qach__item.is-got { box-shadow: 0 0 0 2px var(--amber); }
+.qach__item.is-got .qach__icon { filter: none; }
+.qach__item.is-got b { color: var(--amber); }
+.qach__item.is-got small { color: var(--text); }
+
+.qreset {
+  display: block;
+  margin: 18px 0 0 auto;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-label);
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+.qreset:hover { color: var(--red); }
+.qreset[hidden] { display: none; }
+
+/* Toast "Conquista desbloqueada!" estilo Minecraft */
+.mc {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+  z-index: 260;
+  display: grid;
+  gap: 10px;
+  pointer-events: none;
+}
+.mc__toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 14px 10px 10px;
+  background: #212121;
+  box-shadow: 0 0 0 2px #000, inset 0 0 0 2px #555, inset 0 0 0 4px #2b2b2b, 6px 6px 0 2px rgba(0, 0, 0, 0.45);
+  transform: translateX(calc(100% + 40px));
+  transition: transform 0.35s steps(6);
+}
+.mc__toast.is-in { transform: translateX(0); }
+.mc__icon { flex: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 4px; background: #8b8b8b; box-shadow: inset 2px 2px 0 #373737, inset -2px -2px 0 #fff; }
+.mc__icon svg { max-height: 32px; }
+.mc__t { display: block; font-family: var(--font-label); font-weight: 400; font-size: 14px; color: #ffff55; text-shadow: 2px 2px 0 #3f3f15; }
+.mc__d { display: block; font-family: var(--font-label); font-size: 13px; line-height: 1.4; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; margin-top: 3px; }
+
+/* CVs no contato */
+.cvlinks { margin: 14px 0 0; font-family: var(--font-label); font-size: 13px; text-transform: uppercase; color: var(--muted); }
+.cvlinks a { display: inline-block; margin: 0 8px; padding: 8px 2px; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1000px) {
+  .vsc__body { grid-template-columns: minmax(0, 1fr) 270px; grid-template-areas: "editor tutor" "panel tutor"; }
+  .vsc__explorer { display: none; }
+  .qpicker { display: flex; }
+  .qach { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .vsc__body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "editor" "tutor" "panel"; }
+  .vsc__tutor { border-left: 0; border-top: 1px solid var(--vs-line); }
+  .vsc__code { height: 250px; font-size: 12.5px; }
+  .ln__n { width: 34px; padding-right: 12px; }
+  .term { height: 190px; font-size: 12.5px; padding: 4px 10px 10px; }
+  .vsc__ptabs span:not(.is-on) { display: none; }
+  .vsc__win i { width: 30px; }
+  .vsc__status span:nth-child(2), .vsc__status span:nth-child(5) { display: none; }
+  .vsc__panel { grid-template-columns: minmax(0, 1fr); grid-template-areas: "ptabs" "widget" "term"; }
+  .qwidget.is-on { border-left: 0; border-bottom: 1px solid var(--vs-line); padding: 12px; }
+  .tl { grid-auto-flow: column; }
+  .tl i { width: 28px; height: 28px; }
+  .clk { font-size: 18px; padding: 12px; }
+  .qach { grid-template-columns: 1fr; }
+  .mc { top: 70px; right: 16px; left: 16px; justify-items: end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc__toast { transition: none; }
+}
