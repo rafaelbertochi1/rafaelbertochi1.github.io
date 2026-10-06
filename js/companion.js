@@ -366,10 +366,10 @@
     }
     clearTimeout(roamTimer);
     if (sec.end) {
-      bubble("Gostou? Chama o Rafael pra conversar!", 0);
+      bubble("Gostou? Me chame para conversarmos!", 0);
       endTimer = setTimeout(() => {
         if (current === sec && !panelOpen) { loopTrick(); challenge(); }
-      }, 2600);
+      }, 9000); // a frase "Gostou?..." fica 9 s antes do desafio
       return;
     }
     bubble(sec.lines[sec.visits % sec.lines.length], 4200);

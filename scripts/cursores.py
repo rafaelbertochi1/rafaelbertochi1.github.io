@@ -16,8 +16,8 @@ CONTORNO = (11, 14, 20, 255)
 CORES = {
     "C": (92, 225, 230, 255),   # ciano do site
     "A": (255, 204, 77, 255),   # 창mbar
-    "W": (240, 244, 248, 255),  # branco
-    "S": (154, 167, 184, 255),  # sombra entre os dedos
+    "W": (255, 204, 77, 255),   # luva amarela (cor do site, n찾o confunde com a m찾o do Windows)
+    "S": (201, 151, 31, 255),   # sombra entre os dedos
 }
 
 MIRA = [
@@ -83,7 +83,11 @@ def desenhar(linhas):
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
+# Indicador: a mesma m찾o, deitada, apontando para a direita (para ficar ao lado dos links)
+MAO_DIREITA = ["".join(MAO[len(MAO) - 1 - y][x] for y in range(len(MAO))) for x in range(len(MAO[0]))]
+
 mira = desenhar(MIRA)
+indicador = desenhar(MAO_DIREITA)
 mao = desenhar(MAO)
 mao2 = desenhar(MAO_APERTANDO)
 centro = (len(MIRA) // 2 + 1) * ESCALA
@@ -94,6 +98,7 @@ css = f"""/* Cursores em pixel art (gerado por scripts/cursores.py, n찾o edite �
   --cur-aim: url("{mira}") {centro} {centro}, crosshair;
   --cur-hand: url("{mao}") {ponta_x} {ESCALA}, pointer;
   --cur-press: url("{mao2}") {ponta_x} {3 * ESCALA}, pointer;
+  --ind-hand: url("{indicador}");
 }}
 
 @media (pointer: fine) {{

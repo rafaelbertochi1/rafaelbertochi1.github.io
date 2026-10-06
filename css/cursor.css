@@ -1,8 +1,9 @@
 /* Cursores em pixel art (gerado por scripts/cursores.py, não edite à mão) */
 :root {
   --cur-aim: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAbklEQVR42mNkIBFw84n8xyb+9dMbRlLMYWIYIEC2xYGXLzEEXr5Ef4sHzMejFo9aPGgtZmQYaSUXIy4fDNs4ZkEue/GB9bp6KPwv+ywZGBgYGHicjmOU4cSYMxrHo/l4tAUyWjuNWjxq8WjJBQcAy5AjaYhKbOEAAAAASUVORK5CYII=") 14 14, crosshair;
-  --cur-hand: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAAuUlEQVR42mNkwAG4+UT+M+ABXz+9YWQgAzAx0BmwEFLw9NkTFL60lAxFFtLdh8PfQhZyNeJKxYRS79DxIa7Ui+5zdB8Pfh/2z1xCkY8HzoeEyk5CYNXmAwwMDAwMYb4OeH088HGI7jJ0APPBkClpGNHjkJAPyQUDFodM2FxCaZ03OKunr5/eMJLbThkaqRRXiUNpqkVPDwNf0sDiEeZTmAsDL1+iyCKYuYOnEUWrVDvwqZTUPsagj0MAMl1EYoM2WXQAAAAASUVORK5CYII=") 9 2, pointer;
-  --cur-press: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAArUlEQVR42mNgGAVDHTDikuDmE/mPT+PXT28YybGQadD58OmzJyji0lIyDJT4nO4+ZCFXIy6fo8c9uo8Hvw/7Zy6hyMcD50NC+Y4QWLX5AAMDAwNDmK8DXh8PfByiuwwdwHxALhi4kgZXyUItMGBxyITNJYTKyyEVh0zIZR65ddzQqg/RSxxKUy16ehj4kgYWjzCfwlwYePkSRRbBzB34fEjrVDt4Wm3UqicHPA4BX7pEVShSQr8AAAAASUVORK5CYII=") 9 6, pointer;
+  --cur-hand: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAAt0lEQVR42mNkwAG4+UT+M+ABXz+9YWQgAzAx0BmwEFLwZZ8lCp/H6ThFFtLdh8PfQhZyNeJKxYRS79DxIa7Ui+5zdB8Pfh/u6+SmyMcD50NCZSchcOr0JQYGBgYGM1M9vD4e+DhEdxk6gPlg+Jc05Pp84AtvHqfjFNd5g9OHXz+9YSS3nTKofchIqJ4jlC8JAfT0MPA+xOXTwMuXyLJgva4eSr04eBpRtEq1gycOqVVPordt6O5DAMcXPrSc721WAAAAAElFTkSuQmCC") 9 2, pointer;
+  --cur-press: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAAr0lEQVR42mNgGAVDHTDikuDmE/mPT+PXT28YybGQadD58Ms+SxRxHqfjDJT4nO4+ZCFXIy6fo8c9uo8Hvw/3dXJT5OOB8yGhfEcInDp9iYGBgYHBzFQPr48HPg7RXYYOYD4gFwydfEiuz+nuQwwLeZyOEywvh1QcMiGXeeTWcUOrPkQvcQjlS0IAPT0wDdo2TeDlS2RZsF5XD6VeHPh8SOtUO3jikFr1JHrbhu4+BAD0dD6nuIUcogAAAABJRU5ErkJggg==") 9 6, pointer;
+  --ind-hand: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAcCAYAAAB2+A+pAAAAoElEQVR42mNgGGmAkViF3Hwi//HJf/30hpEUi5kGyscspPrwyz5LFD6P03GyLB48Pkb3KboPyU0Dg8bHjMTGJbUALE0MfBwHXr6EKvM6naYWD758TCw4dRo1pJzKvw5zH5uZ6qHlBtTUi6sMHzAfjzyLWaiVmmFxTWxtNfR8jJ6aSW2RDN18TG5LZPDVx6TWy4RKqsHjY2q1oUhtXw+YjwFpYTIEu0d/7AAAAABJRU5ErkJggg==");
 }
 
 @media (pointer: fine) {
@@ -20,4 +21,46 @@
 @keyframes trailFade {
   0% { opacity: 0.9; transform: none; }
   100% { opacity: 0; transform: translateY(8px) scale(0.5); }
+}
+
+/* Indicador: mãozinha apontando para os links mais importantes ao passar o mouse */
+.hero__cta a[download],
+.cvlinks a,
+.card__links a,
+.continue__cta a,
+.social a,
+.copy { position: relative; }
+.hero__cta a[download]::before,
+.cvlinks a::before,
+.card__links a::before,
+.continue__cta a::before,
+.social a::before,
+.copy::before {
+  content: "";
+  position: absolute;
+  right: calc(100% + 6px);
+  top: 50%;
+  width: 26px;
+  height: 24px;
+  background: var(--ind-hand) no-repeat center / contain;
+  image-rendering: pixelated;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.hero__cta a[download]:hover::before, .hero__cta a[download]:focus-visible::before,
+.cvlinks a:hover::before, .cvlinks a:focus-visible::before,
+.card__links a:hover::before, .card__links a:focus-visible::before,
+.continue__cta a:hover::before, .continue__cta a:focus-visible::before,
+.social a:hover::before, .social a:focus-visible::before,
+.copy:hover::before, .copy:focus-visible::before {
+  opacity: 1;
+  animation: pointAt 0.6s steps(2) infinite;
+}
+@keyframes pointAt { 50% { transform: translate(-6px, -50%); } }
+.btn::before { right: calc(100% + 10px); }
+@media (prefers-reduced-motion: reduce) {
+  .hero__cta a[download]:hover::before, .cvlinks a:hover::before, .card__links a:hover::before,
+  .continue__cta a:hover::before, .social a:hover::before, .copy:hover::before { animation: none; }
 }
