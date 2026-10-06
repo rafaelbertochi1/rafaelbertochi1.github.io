@@ -27,6 +27,7 @@ PAIRS = [
     ('content="Rafael Bertochi: back-end e engenharia de dados, com o robô em pixel art do portfólio"',
      'content="Rafael Bertochi: back-end and data engineering, with the portfolio\'s pixel art robot"'),
     ('<meta property="og:locale" content="pt_BR">', '<meta property="og:locale" content="en_US">'),
+    (f'content="{SITE}/assets/og.png"', f'content="{SITE}/assets/og-en.png"'),  # imagem de prévia em inglês
     (f'<link rel="canonical" href="{SITE}/">', f'<link rel="canonical" href="{SITE}/en/">'),
 
     # navegação
