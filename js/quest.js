@@ -81,6 +81,18 @@
       ],
       pal: { K: "#3a4256", W: "#e6edf3", L: "#5ce1e6", S: "#8b98ad", G: "#3fb950" },
     },
+    ttt: {
+      rows: [
+        "K.K.K.K",
+        "KXKKKOK",
+        "K.K.K.K",
+        "KKKKKKK",
+        "K.K.K.K",
+        "KOKXKXK",
+        "K.K.K.K",
+      ],
+      pal: { K: "#3a4256", X: "#ff6b6b", O: "#5ce1e6" },
+    },
     final: {
       rows: [
         "YYYYYYYY",
@@ -805,6 +817,9 @@
       });
     } catch (e) { /* sem som, tudo bem */ }
   }
+
+  // Disponível para o jogo da velha (js/companion.js)
+  RBF.achievement = (icon, text, title) => unlockToast(icon, text, title);
 
   // ---------- Navegação entre desafios ----------
   function renderNav() {

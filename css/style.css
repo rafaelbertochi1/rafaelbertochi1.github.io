@@ -697,7 +697,8 @@ body.party .hero__name { animation: hue 2s linear infinite; }
   .nav nav { scrollbar-width: none; }
   .nav nav::-webkit-scrollbar { display: none; }
   .nav__links { justify-content: space-between; gap: 8px; }
-  .nav__links a { font-size: 12px; }
+  .nav__links a { font-size: 12px; white-space: nowrap; }
+  .nav__links a.is-active::before { content: none; }
 }
 
 /* Telas de toque: áreas de clique maiores e sem dica de teclado */

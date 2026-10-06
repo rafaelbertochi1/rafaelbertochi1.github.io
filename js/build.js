@@ -108,7 +108,8 @@
     return new Promise((resolve) => {
       const x0 = bot.x;
       const y0 = bot.y;
-      const dur = Math.max(200, (Math.hypot(x1 - x0, y1 - y0) / SPEED) * 1000);
+      // trajetos longos (ficha comprida no celular) andam mais rápido
+      const dur = Math.min(650, Math.max(200, (Math.hypot(x1 - x0, y1 - y0) / SPEED) * 1000));
       const t0 = performance.now();
       let lastSwap = 0;
       bot.el.classList.toggle("is-flip", x1 < x0);
@@ -210,6 +211,16 @@
       io.disconnect();
       setTimeout(start, 250);
     }
-  }, { threshold: 0.2 });
+  }, { threshold: 0, rootMargin: "0px 0px -25% 0px" }); // basta o topo da ficha chegar a 3/4 da tela
   io.observe(sheet);
+
+  // Garantia: se a montagem não começou e a pessoa já passou pela ficha, mostra pronta
+  window.addEventListener("scroll", function guard() {
+    if (started) return window.removeEventListener("scroll", guard);
+    if (sheet.getBoundingClientRect().bottom < 0) {
+      window.removeEventListener("scroll", guard);
+      started = true;
+      finish(true);
+    }
+  }, { passive: true });
 })();

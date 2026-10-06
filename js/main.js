@@ -188,6 +188,7 @@
     "lote validado. pode gravar.",
     "robots.txt respeitado",
     "já jogou os desafios Python?",
+    "me acha no canto da tela!",
   ];
 
   const BOT_W = 56;
@@ -381,7 +382,7 @@
   });
 
   // Ferramentas compartilhadas com os desafios Python (js/quest.js)
-  window.RBF = { toSVG, sprite, say: (text, ms) => say(text, ms) };
+  window.RBF = { toSVG, sprite, toast, say: (text, ms) => say(text, ms) };
 
   // ---------- Início ----------
   runBoot(() => {
