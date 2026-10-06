@@ -1,5 +1,6 @@
-/* Robô companheiro: acompanha a rolagem no canto da tela e desafia
-   o visitante para um jogo da velha que ele mesmo constrói. */
+/* Robô companheiro: o robô do topo decola quando a página desce, acompanha
+   a rolagem comentando cada seção e, no fim, desafia o visitante para um
+   jogo da velha que ele mesmo constrói. */
 (function () {
   "use strict";
 
@@ -44,7 +45,7 @@
   buddy.className = "buddy";
   buddy.setAttribute("aria-label", "Desafiar o robô para um jogo da velha");
   buddy.setAttribute("aria-haspopup", "dialog");
-  buddy.innerHTML = '<span class="buddy__say" aria-hidden="true"></span><span class="buddy__sprite" aria-hidden="true"></span>';
+  buddy.innerHTML = '<span class="buddy__fly"><span class="buddy__say" aria-hidden="true"></span><span class="buddy__sprite" aria-hidden="true"></span></span>';
   document.body.appendChild(buddy);
   const buddySprite = buddy.querySelector(".buddy__sprite");
   const buddySay = buddy.querySelector(".buddy__say");
@@ -80,89 +81,187 @@
 
   builder.innerHTML = RBF.sprite("robot");
 
-  // ---------- Robô que acompanha a rolagem ----------
-  let visible = false;
-  let frame = 0;
-  let walkTimer = null;
-  let lastY = window.scrollY;
+  // ---------- Voo: o robô do topo decola e vira o companheiro ----------
+  const heroBot = document.getElementById("bot");
+  const heroSprite = document.getElementById("botSprite");
+  const fly = buddy.querySelector(".buddy__fly");
+  let state = "ground"; // ground | moving | air
   let sprite = "";
+  let talking = false;
+  let flame = 0;
+  let played = false;
 
   function setSprite(name) {
     if (sprite === name) return;
     sprite = name;
     buddySprite.innerHTML = RBF.sprite(name);
   }
-  setSprite("robot");
+  setSprite("robotFly");
 
-  function show(on) {
-    if (visible === on) return;
-    visible = on;
+  // Chamas do jato piscando
+  setInterval(() => {
+    if (state === "ground" || reduceMotion) return;
+    flame = 1 - flame;
+    setSprite(talking ? "robotFlyTalk" : flame ? "robotFly" : "robotFly2");
+  }, 140);
+
+  function heroAway(on) {
+    RBF.heroAway = on;
+    if (heroBot) heroBot.classList.toggle("is-away", on);
+  }
+
+  function setVisible(on) {
     buddy.classList.toggle("is-on", on);
-    if (on) scheduleCall(2500);
+    buddy.classList.toggle("is-air", on);
   }
 
-  // Só aparece quando o robô do topo saiu da tela
-  const stage = document.getElementById("stage");
-  function checkStage() {
-    if (!stage) return show(true);
-    const r = stage.getBoundingClientRect();
-    show(r.bottom < 0 || r.top > window.innerHeight || panelOpen);
+  // Leva o robô de um ponto da tela até o canto (ou o caminho inverso), num arco de voo
+  function flight(from, reverse, done) {
+    const to = buddySprite.getBoundingClientRect();
+    const dx = from.left - to.left;
+    const dy = from.top - to.top;
+    const sc = from.width / to.width || 1;
+    const frames = [
+      { transform: `translate(${dx}px, ${dy}px) scale(${sc})`, offset: 0 },
+      { transform: `translate(${dx}px, ${dy - 50}px) scale(${sc})`, offset: 0.25 },
+      { transform: `translate(${dx * 0.35}px, ${Math.min(dy, 0) * 0.35 - 70}px) scale(${(sc + 1) / 2})`, offset: 0.65 },
+      { transform: "translate(0px, 0px) scale(1)", offset: 1 },
+    ];
+    if (reverse) frames.reverse().forEach((f) => { f.offset = 1 - f.offset; });
+    const anim = fly.animate(frames, { duration: 1100, easing: "ease-in-out", fill: "both" });
+    anim.onfinish = () => { anim.cancel(); done(); };
   }
-  window.addEventListener("scroll", checkStage, { passive: true });
-  window.addEventListener("resize", checkStage);
-  setTimeout(checkStage, 0);
 
-  // "Anda" enquanto a página rola
-  window.addEventListener("scroll", () => {
-    if (!visible || reduceMotion || panelOpen) return;
-    const y = window.scrollY;
-    buddy.classList.toggle("is-up", y < lastY);
-    lastY = y;
-    if (!walkTimer) {
-      walkTimer = setInterval(() => {
-        frame = 1 - frame;
-        setSprite(frame ? "robotWalk" : "robot");
-      }, 130);
+  function takeoff() {
+    state = "moving";
+    lag = 0;
+    fly.style.transform = "";
+    const heroRect = heroSprite ? heroSprite.getBoundingClientRect() : null;
+    const from = heroRect && heroRect.bottom > 0
+      ? heroRect
+      : { left: window.innerWidth + 40, top: -80, width: 52 }; // chegou no meio da página: entra pelo alto
+    heroAway(true);
+    setVisible(true);
+    if (reduceMotion) return arrived();
+    flight(from, false, arrived);
+  }
+
+  function arrived() {
+    state = "air";
+    lastScrollY = window.scrollY;
+    check();
+  }
+
+  function land() {
+    state = "moving";
+    current = null;
+    clearBubble();
+    fly.style.transform = "";
+    const finish = () => {
+      setVisible(false);
+      heroAway(false);
+      state = "ground";
+      check();
+    };
+    if (reduceMotion || !heroSprite) return finish();
+    flight(heroSprite.getBoundingClientRect(), true, finish);
+  }
+
+  // Acompanha a rolagem com um leve "atraso", como se estivesse voando atrás de você
+  let lastScrollY = window.scrollY;
+  let lag = 0;
+  function follow() {
+    if (state === "air" && !reduceMotion) {
+      const y = window.scrollY;
+      const v = y - lastScrollY;
+      lastScrollY = y;
+      lag = Math.max(-36, Math.min(36, lag * 0.86 - v * 0.5));
+      fly.style.transform = Math.abs(lag) > 0.3 ? `translateY(${lag.toFixed(1)}px)` : "";
     }
-    clearTimeout(buddy._stop);
-    buddy._stop = setTimeout(() => {
-      clearInterval(walkTimer);
-      walkTimer = null;
-      setSprite("robot");
-    }, 180);
-  }, { passive: true });
+    requestAnimationFrame(follow);
+  }
+  requestAnimationFrame(follow);
 
-  // ---------- Chamadas para o desafio ----------
-  const CALLS = ["Desafio?", "Bora um jogo da velha?", "Aposto que te ganho!", "Me clica, vai!", "Jogo da velha?"];
-  const CALLS_AFTER = ["Revanche?", "Mais uma?", "Agora eu ganho!"];
-  let callTimer;
-  let calls = 0;
-  let played = false;
+  // ---------- Comentários sobre as seções ----------
+  const SECTIONS = [
+    { id: "missoes", lines: ["Esses robôs rodam em produção de verdade!", "Os repositórios estão no GitHub, dá uma olhada!"] },
+    { id: "ficha", lines: ["Meus primos montaram essa ficha!", "Repara nos atributos do Rafael!"] },
+    { id: "jornada", lines: ["Cada save point é uma fase da carreira.", "Do Excel com VBA aos robôs em Python!"] },
+    { id: "python", lines: ["Bora aprender Python? Começa pela calculadora!", "Cada desafio tem uma conquista!"] },
+    { id: "contato", end: true },
+  ].map((sec) => Object.assign(sec, { el: document.getElementById(sec.id), visits: 0 }));
+
+  let current = null;
+  let endTimer;
+  let hopTimer;
 
   function bubble(text, ms) {
+    clearTimeout(buddySay._t);
     buddySay.textContent = text;
     buddySay.classList.add("is-on");
-    setSprite("robotTalk");
-    clearTimeout(buddySay._t);
-    buddySay._t = setTimeout(() => {
-      buddySay.classList.remove("is-on");
-      setSprite("robot");
-    }, ms || 3200);
+    talking = true;
+    if (ms) buddySay._t = setTimeout(clearBubble, ms);
   }
 
-  function scheduleCall(delay) {
-    clearTimeout(callTimer);
-    callTimer = setTimeout(() => {
-      if (!visible || panelOpen) return scheduleCall(8000);
-      if (calls >= 6) return; // não insiste para sempre
-      calls++;
-      bubble(played ? pick(CALLS_AFTER) : pick(CALLS));
-      buddy.classList.remove("is-hop");
-      void buddy.offsetWidth;
-      buddy.classList.add("is-hop");
-      scheduleCall(22000 + Math.random() * 10000);
-    }, delay);
+  function clearBubble() {
+    clearTimeout(buddySay._t);
+    clearTimeout(endTimer);
+    clearInterval(hopTimer);
+    buddySay.classList.remove("is-on");
+    buddy.classList.remove("is-challenge");
+    talking = false;
   }
+
+  function hop() {
+    buddy.classList.remove("is-hop");
+    void buddy.offsetWidth;
+    buddy.classList.add("is-hop");
+  }
+
+  function challenge() {
+    buddy.classList.add("is-challenge");
+    bubble(played ? "Revanche? Eu te desafio!" : "Eu te desafio!", 0);
+    hop();
+    clearInterval(hopTimer);
+    hopTimer = setInterval(hop, 3200);
+  }
+
+  function sectionNow() {
+    const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    if (nearBottom) return SECTIONS[SECTIONS.length - 1];
+    let found = null;
+    for (const sec of SECTIONS) {
+      if (sec.el && sec.el.getBoundingClientRect().top <= window.innerHeight * 0.55) found = sec;
+    }
+    return found;
+  }
+
+  function comment() {
+    const sec = sectionNow();
+    if (sec === current) return;
+    current = sec;
+    clearBubble();
+    if (!sec || panelOpen) return;
+    if (sec.end) {
+      bubble("Gostou? Chama o Rafael pra conversar!", 0);
+      endTimer = setTimeout(() => { if (current === sec && !panelOpen) challenge(); }, 2600);
+      return;
+    }
+    bubble(sec.lines[sec.visits % sec.lines.length], 3800);
+    sec.visits++;
+  }
+
+  function check() {
+    if (state === "moving") return;
+    const y = window.scrollY;
+    if (state === "ground" && y > 60) return takeoff();
+    if (state === "air" && y < 20 && !panelOpen) return land();
+    if (state === "air") comment();
+  }
+
+  window.addEventListener("scroll", check, { passive: true });
+  window.addEventListener("resize", check);
+  setTimeout(check, 300);
 
   // ---------- Jogo ----------
   const LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -277,16 +376,58 @@
     }
   }
 
+  // O robô voa até a casa e desenha o "O" ponto por ponto, em círculo
+  const O_ROWS = [
+    "..OOOO..",
+    ".OOOOOO.",
+    "OOO..OOO",
+    "OO....OO",
+    "OO....OO",
+    "OOO..OOO",
+    ".OOOOOO.",
+    "..OOOO..",
+  ];
+  function drawO(cell) {
+    const pts = [];
+    O_ROWS.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (ch === "O") pts.push({ x, y, k: (Math.atan2(y - 3.5, x - 3.5) + Math.PI * 2.5) % (Math.PI * 2) });
+    }));
+    pts.sort((a, b) => a.k - b.k); // começa no topo e segue no sentido horário
+    cell.innerHTML = `<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">${
+      pts.map((pt) => `<rect x="${pt.x}" y="${pt.y}" width="1.02" height="1.02" fill="#5ce1e6" opacity="0"/>`).join("")
+    }</svg>`;
+    const rects = cell.querySelectorAll("rect");
+    if (reduceMotion) { rects.forEach((r) => r.setAttribute("opacity", "1")); return Promise.resolve(); }
+    return new Promise((resolve) => {
+      let k = 0;
+      const t = setInterval(() => {
+        if (k >= rects.length) { clearInterval(t); resolve(); return; }
+        rects[k++].setAttribute("opacity", "1");
+      }, 18);
+    });
+  }
+
   async function robotTurn() {
     const my = game;
     say(pick(["Hmm...", "Calculando...", "Deixa eu ver...", "Pensando..."]));
-    await wait(450 + Math.random() * 450);
+    await wait(350 + Math.random() * 350);
     if (my !== game || over) return;
     const i = robotChoice();
     board[i] = "O";
+    // voa até a casa escolhida...
+    builder.innerHTML = RBF.sprite("robotFly");
+    builder.classList.add("is-on");
+    moveBuilder(i);
+    say("Minha vez!");
+    await wait(320);
+    if (my !== game) return;
+    // ...e desenha
+    builder.innerHTML = RBF.sprite("robotFlyTalk");
+    await drawO(cells[i]);
+    await wait(120);
+    builder.classList.remove("is-on");
+    if (my !== game) return;
     paint(i);
-    cells[i].classList.add("is-pop");
-    setTimeout(() => cells[i].classList.remove("is-pop"), 300);
     if (!checkEnd()) {
       turn = "X";
       say("Sua vez!");
@@ -350,8 +491,7 @@
     panelOpen = true;
     panel.hidden = false;
     buddy.setAttribute("aria-expanded", "true");
-    buddySay.classList.remove("is-on");
-    clearTimeout(callTimer);
+    clearBubble();
     renderScore();
     requestAnimationFrame(() => panel.classList.add("is-on"));
     if (over) newGame();
@@ -364,8 +504,13 @@
     buddy.setAttribute("aria-expanded", "false");
     setTimeout(() => { if (!panelOpen) panel.hidden = true; }, 200);
     buddy.focus({ preventScroll: true });
-    if (played) bubble(pick(["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
-    scheduleCall(25000);
+    current = null; // volta a comentar a seção atual
+    if (played && state === "air") {
+      bubble(pick(["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
+      setTimeout(check, 2300);
+    } else {
+      check();
+    }
   }
 
   buddy.addEventListener("click", () => (panelOpen ? closePanel() : openPanel()));

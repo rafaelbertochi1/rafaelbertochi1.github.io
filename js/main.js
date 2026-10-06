@@ -46,6 +46,10 @@
     robotBlink: variant(ROBOT_BASE, { 4: ".BLLLLLLLLLLB.", 5: ".BLKKLLLLKKLB." }),
     robotWalk: variant(ROBOT_BASE, { 13: "..DD......DD..", 10: ".DCCCCCCCCCCD.", 11: ".DCCCYYYYCCCD." }),
     robotTalk: variant(ROBOT_BASE, { 0: "......RR......", 6: ".BLLMLLLLMLLB.", 7: ".BLLLMMMMLLLB." }),
+    // voando: jato no lugar dos pés (dois quadros de chama)
+    robotFly: variant(ROBOT_BASE, { 13: "...RY....YR..." }),
+    robotFly2: variant(ROBOT_BASE, { 13: "...YY....YY..." }),
+    robotFlyTalk: variant(ROBOT_BASE, { 0: "......RR......", 6: ".BLLMLLLLMLLB.", 7: ".BLLLMMMMLLLB.", 13: "...RY....YR..." }),
     floppy: [
       "CCCCCCCCC.",
       "CCSSSSKSCC",
@@ -254,7 +258,7 @@
     const dt = Math.min(0.05, (now - lastTime) / 1000);
     lastTime = now;
 
-    if (stageVisible) {
+    if (stageVisible && !(window.RBF && window.RBF.heroAway)) {
       const b = bounds();
       const walking = now > pausedUntil && !talking;
 
