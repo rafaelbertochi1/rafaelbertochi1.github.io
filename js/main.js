@@ -253,6 +253,19 @@
     return { min: 16, max: Math.max(16, stage.clientWidth - 16 - BOT_W) };
   }
 
+  // Com mouse, o robô do topo acompanha o cursor para a direita e para a esquerda
+  let mouseX = null;
+  let mouseAt = 0;
+  const heroSection = document.getElementById("topo");
+  if (heroSection && window.matchMedia("(pointer: fine)").matches) {
+    heroSection.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX - stage.getBoundingClientRect().left - BOT_W / 2;
+      mouseAt = performance.now();
+    });
+    heroSection.addEventListener("mouseleave", () => { mouseX = null; });
+  }
+  const FOLLOW_SPEED = 170; // px por segundo
+
   function tick(now) {
     if (!lastTime) lastTime = now;
     const dt = Math.min(0.05, (now - lastTime) / 1000);
@@ -260,9 +273,26 @@
 
     if (stageVisible && !(window.RBF && window.RBF.heroAway)) {
       const b = bounds();
+      const following = mouseX !== null && now - mouseAt < 5000 && !talking;
       const walking = now > pausedUntil && !talking;
 
-      if (walking) {
+      if (following) {
+        const goal = Math.max(b.min, Math.min(b.max, mouseX));
+        const diff = goal - x;
+        if (Math.abs(diff) > 3) {
+          dir = diff > 0 ? 1 : -1;
+          x += dir * Math.min(Math.abs(diff), FOLLOW_SPEED * dt);
+          if (now - lastFrameSwap > 140) {
+            frame = 1 - frame;
+            lastFrameSwap = now;
+            setBotSprite(frame ? "robotWalk" : "robot");
+          }
+        } else {
+          // chegou no cursor: fica olhando e piscando
+          const blink = Math.floor(now / 160) % 18 === 0;
+          setBotSprite(blink ? "robotBlink" : "robot");
+        }
+      } else if (walking) {
         x += dir * SPEED * dt;
         if (x >= b.max) { x = b.max; dir = -1; }
         if (x <= b.min) { x = b.min; dir = 1; }

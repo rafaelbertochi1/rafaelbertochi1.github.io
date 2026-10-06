@@ -92,9 +92,11 @@
   let flame = 0;
   let played = false;
 
-  // Posição atual (coordenadas da tela) e o "modo" que define para onde ele voa
+  // Posição atual (coordenadas da tela) e o "modo" que define o que ele está fazendo:
+  //   perch  = flutuando na lateral          spot = voando até um ponto
+  //   stand  = em pé em cima de algo, andando lift/land = decolagem e pouso no chão do topo
   const pos = { x: 0, y: 0 };
-  let mode = { kind: "perch" }; // perch | anchor | spot | lift | land
+  let mode = { kind: "perch" };
   let facing = 1;
   let looping = false;
 
@@ -105,12 +107,20 @@
   }
   setSprite("robotFly");
 
-  // Chamas do jato piscando
+  const standing = () => mode.kind === "stand" && mode.landed;
+
+  // Animação do sprite: chamas quando voa, passinhos quando anda em cima de algo
   setInterval(() => {
     if (state === "ground" || reduceMotion || document.hidden) return;
     flame = 1 - flame;
-    setSprite(talking ? "robotFlyTalk" : flame ? "robotFly" : "robotFly2");
-  }, 140);
+    if (standing()) {
+      if (talking) setSprite("robotTalk");
+      else setSprite(mode.dir && flame ? "robotWalk" : "robot");
+    } else {
+      setSprite(talking ? "robotFlyTalk" : flame ? "robotFly" : "robotFly2");
+    }
+    buddy.classList.toggle("is-standing", standing());
+  }, 150);
 
   function heroAway(on) {
     RBF.heroAway = on;
@@ -126,8 +136,8 @@
   const clampX = (x) => Math.max(8, Math.min(window.innerWidth - size() - 8, x));
   const clampY = (y) => Math.max(navH() + 10, Math.min(window.innerHeight - size() - 10, y));
   const isMobile = () => window.innerWidth < 720;
+  const rand = (a, b) => a + Math.random() * (b - a);
 
-  // Poleiro: canto/lateral direita, com um leve passeio no ar
   function perchPoint(t) {
     const s = size();
     const wx = reduceMotion ? 0 : Math.sin(t / 1700) * 8;
@@ -136,30 +146,25 @@
     return { x: window.innerWidth - s - 30 + wx, y: window.innerHeight * 0.58 + wy };
   }
 
-  // Ao lado do texto de um título (ou em cima, se não couber)
   function textRect(el) {
     const r = document.createRange();
     r.selectNodeContents(el);
     const rect = r.getBoundingClientRect();
     return rect.width ? rect : el.getBoundingClientRect();
   }
-  function anchorPoint(el) {
-    const r = textRect(el);
+
+  const onScreen = (r) => r.top > navH() + 30 && r.top < window.innerHeight - 70 && r.width > 0;
+
+  // Em pé em cima de um elemento: os pés encostam na borda de cima
+  function standPoint(m) {
+    const r = m.rect();
     const s = size();
-    let x = r.right + 18;
-    let y = r.top + r.height / 2 - s / 2 - 4;
-    if (x > window.innerWidth - s - 8) { x = r.right - s; y = r.top - s - 12; }
-    return { x: clampX(x), y: clampY(y) };
+    return { x: r.left + m.ox, y: r.top - s + 3 };
   }
 
   function target(t) {
     switch (mode.kind) {
-      case "anchor": {
-        // título fora da tela: volta para o poleiro em vez de ficar grudado na borda
-        const r = mode.el.getBoundingClientRect();
-        if (r.bottom < navH() + 10 || r.top > window.innerHeight - 40) return perchPoint(t);
-        return anchorPoint(mode.el);
-      }
+      case "stand": return standPoint(mode);
       case "spot":
       case "lift": return mode.point;
       case "land": {
@@ -173,20 +178,37 @@
   let running = false;
   function frame(t) {
     if (state === "ground" || document.hidden) { running = false; return; }
+
+    if (mode.kind === "stand") {
+      const r = mode.rect();
+      // o que ele pisava saiu da tela: decola e procura outro lugar
+      if (!onScreen(r)) { mode = { kind: "perch" }; scheduleRoam(400); }
+      else if (mode.landed && mode.dir && !talking) {
+        // anda de um lado para o outro em cima do elemento
+        mode.ox += mode.dir * (isMobile() ? 0.6 : 0.8);
+        const max = Math.max(0, r.width - size());
+        if (mode.ox <= 0 || mode.ox >= max) { mode.ox = Math.max(0, Math.min(max, mode.ox)); mode.dir *= -1; }
+        facing = mode.dir;
+      }
+    }
+
     const tg = target(t);
-    const k = reduceMotion ? 1 : mode.kind === "land" ? 0.14 : 0.075;
+    let k = mode.kind === "land" ? 0.14 : 0.075;
+    if (standing() || reduceMotion) k = 1; // em pé: acompanha o elemento sem atraso
     let dx = (tg.x - pos.x) * k;
     let dy = (tg.y - pos.y) * k;
     const d = Math.hypot(dx, dy);
-    if (!reduceMotion && d > 22) { dx *= 22 / d; dy *= 22 / d; }
+    if (k < 1 && d > 22) { dx *= 22 / d; dy *= 22 / d; }
     pos.x += dx;
     pos.y += dy;
-    if (Math.abs(dx) > 0.7) facing = dx > 0 ? 1 : -1;
+    if (!standing() && Math.abs(dx) > 0.7) facing = dx > 0 ? 1 : -1;
     buddy.style.transform = `translate(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px)`;
     buddy.classList.toggle("is-left", facing < 0);
     buddy.classList.toggle("say-left", pos.x < window.innerWidth / 2);
     buddy.classList.toggle("say-below", pos.y < navH() + 110);
+
     const left = Math.hypot(tg.x - pos.x, tg.y - pos.y);
+    if (mode.kind === "stand" && !mode.landed && left < 3) mode.landed = true;
     if (mode.kind === "land" && left < 2) return touchdown();
     if (mode.kind === "lift" && left < 8) mode = mode.next;
     requestAnimationFrame(frame);
@@ -205,7 +227,7 @@
       pos.x = r.left + (r.width - s) / 2;
       pos.y = r.top + r.height - s;
     } else {
-      pos.x = window.innerWidth + 20; // chegou no meio da página: entra pela lateral
+      pos.x = window.innerWidth + 20;
       pos.y = window.innerHeight * 0.3;
     }
     state = "air";
@@ -213,13 +235,14 @@
     setVisible(true);
     mode = { kind: "lift", point: { x: clampX(pos.x + 30), y: clampY(pos.y - 120) }, next: { kind: "perch" } };
     run();
-    scheduleTrick();
+    scheduleRoam(1800);
   }
 
   function land() {
     current = null;
     clearBubble();
     clearTimeout(perchTimer);
+    clearTimeout(roamTimer);
     mode = { kind: "land" };
   }
 
@@ -229,7 +252,7 @@
     mode = { kind: "perch" };
     setVisible(false);
     heroAway(false);
-    clearTimeout(trickTimer);
+    clearTimeout(roamTimer);
   }
 
   function loopTrick() {
@@ -237,6 +260,19 @@
     looping = true;
     buddy.classList.add("is-loop");
     setTimeout(() => { buddy.classList.remove("is-loop"); looping = false; }, 850);
+  }
+
+  // Pousa em cima de um elemento (rectFn devolve o retângulo onde ele pisa)
+  function standOn(rectFn, opts) {
+    const r = rectFn();
+    const max = Math.max(0, r.width - size());
+    mode = {
+      kind: "stand",
+      rect: rectFn,
+      ox: opts && opts.ox != null ? Math.max(0, Math.min(max, opts.ox)) : rand(0, max),
+      dir: opts && opts.still ? 0 : (Math.random() < 0.5 ? -1 : 1),
+      landed: false,
+    };
   }
 
   // ---------- Comentários sobre as seções ----------
@@ -284,7 +320,7 @@
 
   function challenge() {
     buddy.classList.add("is-challenge");
-    bubble(played ? "Revanche? Eu te desafio!" : "Eu te desafio!", 0);
+    bubble(played ? "Revanche? Eu te desafio para um jogo!" : "Eu te desafio para um jogo!", 0);
     hop();
     clearInterval(hopTimer);
     hopTimer = setInterval(hop, 3200);
@@ -300,7 +336,7 @@
     return found;
   }
 
-  // Só reage se a pessoa ficar na seção por um instante (rolagem rápida não faz ele voar à toa)
+  // Só reage se a pessoa ficar na seção por um instante
   function considerSection() {
     const sec = sectionNow();
     if (sec === current) { pending = null; clearTimeout(pendingTimer); return; }
@@ -317,8 +353,18 @@
     current = sec;
     clearBubble();
     clearTimeout(perchTimer);
-    if (!sec || panelOpen || state !== "air" || mode.kind === "land") { if (mode.kind === "anchor") mode = { kind: "perch" }; return; }
-    mode = sec.title ? { kind: "anchor", el: sec.title } : { kind: "perch" };
+    if (!sec || panelOpen || state !== "air" || mode.kind === "land") return;
+    const titleOk = sec.title && onScreen(textRect(sec.title));
+    // pousa em cima do título da seção, perto do fim do texto
+    if (titleOk) {
+      const t = sec.title;
+      standOn(() => textRect(t), { ox: textRect(t).width - size() - 10, still: true });
+    } else {
+      // o título já passou: pousa em outra coisa visível da mesma seção
+      const inside = landables().filter((el) => sec.el.contains(el));
+      if (inside.length) { const el = inside[0]; standOn(() => el.getBoundingClientRect(), { still: true }); mode.el = el; }
+    }
+    clearTimeout(roamTimer);
     if (sec.end) {
       bubble("Gostou? Chama o Rafael pra conversar!", 0);
       endTimer = setTimeout(() => {
@@ -328,61 +374,60 @@
     }
     bubble(sec.lines[sec.visits % sec.lines.length], 4200);
     sec.visits++;
-    perchTimer = setTimeout(() => { if (current === sec && mode.kind === "anchor") mode = { kind: "perch" }; }, 4800);
+    // depois de comentar, volta a passear
+    perchTimer = setTimeout(() => { if (current === sec) scheduleRoam(200); }, 4600);
   }
 
-  // ---------- Graças para chamar atenção (quando está no poleiro) ----------
+  // ---------- Vida própria: passeia, pousa nas coisas, faz graça ----------
   const CHIRPS = ["Psiu!", "Bip bop!", "Tô de olho!", "Tudo certo aí?", "Rolando junto!"];
-  const PEEKS = ["Olha isso aqui!", "Esse é dos bons!", "Repara nesse!"];
-  let trickTimer;
+  const PERCHES = [".card", ".section__title", ".subhead", ".sheet", ".save__body", ".trophy", ".vsc", ".qach__item", ".continue", ".quest"];
+  let roamTimer;
 
-  function visibleOf(selector) {
-    return Array.from(document.querySelectorAll(selector)).filter((el) => {
+  function landables() {
+    return Array.from(document.querySelectorAll(PERCHES.join(","))).filter((el) => {
       const r = el.getBoundingClientRect();
-      return r.top > navH() + 40 && r.top < window.innerHeight - 140 && r.width > 0;
+      return onScreen(r) && r.width > size() + 24;
     });
   }
 
-  function doTrick() {
-    if (state !== "air" || mode.kind !== "perch" || talking || panelOpen || reduceMotion) return;
-    const s = size();
+  function roam() {
+    if (state !== "air" || panelOpen || mode.kind === "land" || mode.kind === "lift") return scheduleRoam(1500);
+    if (current && current.end) return; // no fim, fica no "CONTINUE?" desafiando
+    if (talking) return scheduleRoam(1500);
     const roll = Math.random();
-    if (roll < 0.3) {
-      // atravessa a tela e volta
-      const y = clampY(pos.y - 40);
-      mode = { kind: "spot", point: { x: isMobile() ? 14 : 24, y } };
-      setTimeout(() => { if (mode.kind === "spot") mode = { kind: "perch" }; }, 1900);
-    } else if (roll < 0.55) {
-      loopTrick();
-      if (Math.random() < 0.5) bubble("Wheee!", 1400);
-    } else if (roll < 0.8) {
-      // voa até algo interessante que está na tela
-      const things = visibleOf(".card, .trophy, .save__body, .qach__item, .vsc, .sheet");
-      if (!things.length) { hop(); bubble(CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1800); return; }
-      const el = things[Math.floor(Math.random() * things.length)];
-      const r = el.getBoundingClientRect();
-      mode = { kind: "spot", point: { x: clampX(r.right - s - 6), y: clampY(r.top - s * 0.6) } };
-      setTimeout(() => { if (mode.kind === "spot") bubble(PEEKS[Math.floor(Math.random() * PEEKS.length)], 1800); }, 900);
-      setTimeout(() => { if (mode.kind === "spot") mode = { kind: "perch" }; }, 3000);
+    const places = landables();
+    if (places.length && roll < 0.7) {
+      // pousa em cima de algo visível (evita repetir o mesmo lugar)
+      const options = places.filter((el) => !(mode.kind === "stand" && mode.el === el));
+      const el = (options.length ? options : places)[Math.floor(Math.random() * (options.length || places.length))];
+      const useText = el.matches(".section__title, .subhead");
+      standOn(() => (useText ? textRect(el) : el.getBoundingClientRect()));
+      mode.el = el;
+      if (Math.random() < 0.3) setTimeout(() => { if (standing()) bubble(CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1800); }, 1400);
+      scheduleRoam(rand(4500, 7500));
+    } else if (roll < 0.87) {
+      // voa até um ponto qualquer da tela
+      mode = { kind: "spot", point: { x: clampX(rand(10, window.innerWidth)), y: clampY(rand(navH() + 40, window.innerHeight - 90)) } };
+      if (Math.random() < 0.4) setTimeout(loopTrick, 700);
+      scheduleRoam(rand(2200, 3200));
     } else {
-      hop();
-      bubble(CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1800);
+      loopTrick();
+      if (Math.random() < 0.5) bubble(Math.random() < 0.5 ? "Wheee!" : CHIRPS[Math.floor(Math.random() * CHIRPS.length)], 1500);
+      scheduleRoam(rand(2000, 3000));
     }
   }
 
-  function scheduleTrick() {
-    clearTimeout(trickTimer);
-    trickTimer = setTimeout(() => {
-      doTrick();
-      if (state === "air") scheduleTrick();
-    }, 8000 + Math.random() * 6000);
+  function scheduleRoam(ms) {
+    clearTimeout(roamTimer);
+    if (reduceMotion) return;
+    roamTimer = setTimeout(roam, ms);
   }
 
   function check() {
     const y = window.scrollY;
-    if (state === "ground") { if (y > 60) takeoff(); return; }
+    if (state === "ground") { if (y > 60) { takeoff(); considerSection(); } return; }
     if (y < 20 && !panelOpen) { if (mode.kind !== "land") land(); return; }
-    if (mode.kind === "land") mode = { kind: "perch" }; // desistiu de voltar ao topo
+    if (mode.kind === "land") { mode = { kind: "perch" }; scheduleRoam(800); }
     considerSection();
   }
 
@@ -646,6 +691,7 @@
     buddy.setAttribute("aria-expanded", "true");
     clearBubble();
     clearTimeout(perchTimer);
+    clearTimeout(roamTimer);
     mode = { kind: "spot", point: { x: window.innerWidth - size() - 20, y: window.innerHeight - size() - 18 } };
     run();
     renderScore();
@@ -662,6 +708,7 @@
     buddy.focus({ preventScroll: true });
     current = null; // volta a comentar a seção atual
     mode = { kind: "perch" };
+    scheduleRoam(2600);
     if (played && state === "air") {
       bubble(pick(["Volta quando quiser!", "Até a próxima!", "Foi divertido!"]), 2200);
       setTimeout(check, 2300);

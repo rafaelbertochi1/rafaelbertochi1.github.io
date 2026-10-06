@@ -24,6 +24,8 @@
 @keyframes hover { 50% { translate: 0 -5px; } }
 .buddy.is-hop .buddy__fly { animation: buddyHop 0.6s steps(6); }
 .buddy.is-left .buddy__sprite { transform: scaleX(-1); }
+/* Em pé em cima de algo: sem flutuar, sombra colada no "chão" */
+.buddy.is-standing .buddy__sprite { animation: none; filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5)); }
 .buddy.is-loop .buddy__sprite { animation: loopDeLoop 0.8s steps(8); }
 @keyframes loopDeLoop { to { rotate: 360deg; } }
 @keyframes buddyHop {

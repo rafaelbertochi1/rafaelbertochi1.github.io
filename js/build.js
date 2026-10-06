@@ -1,7 +1,6 @@
 /* Ficha do personagem montada por robozinhos.
    O conteúdo está no HTML desde o início; aqui só escondemos as peças
-   e uma equipe de robôs "encaixa" cada uma no lugar (~5 s, toda vez que a página abre;
-   depois dá para remontar com o botão "Montar de novo"). */
+   e uma equipe de robôs "encaixa" cada uma no lugar (~5 s, toda vez que a página abre). */
 (function () {
   "use strict";
 
@@ -182,32 +181,10 @@
       doneOnce = true;
       sheet.classList.remove("is-building");
       if (crew) crew.remove();
-      addReplay();
     };
     if (skip) return done();
     Promise.all(robots.map(leave)).then(() => setTimeout(done, 200));
     setTimeout(done, 1600); // garantia caso a aba fique em segundo plano
-  }
-
-  // Depois de pronta, um botão permite ver a montagem de novo
-  function addReplay() {
-    if (sheet.querySelector(".crew__skip")) return;
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "crew__skip crew__replay";
-    btn.textContent = "↻ Montar de novo";
-    btn.addEventListener("click", () => {
-      btn.remove();
-      JOBS.forEach((j) => { j.done = false; j.els.forEach((el) => el.classList.remove("is-placed")); });
-      q(".stats__bar i[data-on]").forEach((i) => i.classList.remove("on"));
-      sheet.classList.add("is-building");
-      nextJob = 0;
-      finished = false;
-      started = false;
-      robots = [];
-      start();
-    });
-    sheet.appendChild(btn);
   }
 
   function start() {
