@@ -277,9 +277,9 @@
 
   // ---------- Comentários sobre as seções ----------
   const SECTIONS = [
-    { id: "missoes", lines: ["Esses robôs rodam em produção de verdade!", "Os repositórios estão no GitHub, dá uma olhada!"] },
-    { id: "ficha", lines: ["Meus primos montaram essa ficha!", "Clica no inventário pra ver onde o Rafael usou cada coisa!"] },
-    { id: "jornada", lines: ["Cada save point é uma fase da carreira.", "Do Excel com VBA aos robôs em Python!"] },
+    { id: "missoes", lines: ["Esses robôs que eu criei rodam em produção de verdade!", "Meus repositórios estão no GitHub, dá uma olhada!"] },
+    { id: "ficha", lines: ["Meus primos montaram a minha ficha!", "Clica no meu inventário pra ver onde usei cada coisa!"] },
+    { id: "jornada", lines: ["Cada save point é uma fase da minha carreira.", "Do Excel com VBA aos robôs em Python!"] },
     { id: "python", lines: ["Bora aprender Python? Começa pela calculadora!", "Cada desafio tem uma conquista!"] },
     { id: "contato", end: true },
   ].map((sec) => Object.assign(sec, {

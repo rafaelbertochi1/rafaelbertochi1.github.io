@@ -515,7 +515,7 @@
     document.dispatchEvent(new CustomEvent("rbf:ready"));
     if (!reduceMotion) {
       requestAnimationFrame(tick);
-      setTimeout(() => say("oi! sou o bot do Rafael", 2600), 700);
+      setTimeout(() => say("oi! sou o Rafael, versão robô!", 2600), 700);
     } else {
       bot.style.transform = "translateX(0)";
     }
