@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rafael Bertochi · Dev Back-end</title>
+  <meta name="description" content="Rafael Bertochi: desenvolvedor back-end em formação. Robôs e pipelines em Python, Playwright, PostgreSQL e Docker. Buscando vaga de Dev Back-end Júnior.">
+  <meta name="theme-color" content="#0b0e14">
+  <meta property="og:title" content="Rafael Bertochi · Dev Back-end">
+  <meta property="og:description" content="Construo robôs em Python que tiram trabalho manual do caminho.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- Tela de boot (só na primeira visita da sessão) -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <pre class="boot__log" id="bootLog"></pre>
+    <p class="boot__skip">Pressione qualquer tecla para pular</p>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="nav__logo" href="#topo" aria-label="Início">
+        <span class="nav__sprite" data-sprite="robot" aria-hidden="true"></span>
+        <span>RAFAEL.DEV</span>
+      </a>
+      <nav aria-label="Seções">
+        <ul class="nav__links">
+          <li><a href="#missoes">Projetos</a></li>
+          <li><a href="#ficha">Sobre</a></li>
+          <li><a href="#jornada">Experiência</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <button class="nav__crt" id="crtToggle" type="button" aria-pressed="true" title="Liga/desliga o efeito de tela antiga">CRT</button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- HERO -->
+    <section class="hero" id="topo">
+      <div class="wrap">
+        <div class="hud" aria-label="Status">
+          <span class="hud__item">LVL <b>21</b></span>
+          <span class="hud__item">CLASSE <b>BACK-END</b></span>
+          <span class="hud__item hud__xp">
+            <span>XP</span>
+            <span class="xpbar" role="img" aria-label="Progresso de estagiário para júnior"><span class="xpbar__fill"></span></span>
+            <span class="hud__xplabel">ESTAGIÁRIO → JÚNIOR</span>
+          </span>
+        </div>
+
+        <h1 class="hero__name"><span>RAFAEL</span> <span>BERTOCHI</span></h1>
+
+        <p class="hero__role">Desenvolvedor back-end · Python · Automação · SQL</p>
+
+        <p class="hero__pitch">
+          Construo robôs em Python que tiram trabalho manual do caminho, entre
+          sistemas web, PDFs, bancos de dados e planilhas. Hoje eles rodam em produção
+          no meu estágio.
+        </p>
+
+        <p class="quest">
+          <span class="quest__tag">QUEST ATUAL</span>
+          <span>Encontrar minha primeira vaga de <strong>Dev Back-end Júnior</strong>.</span>
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#missoes">▶ Ver projetos</a>
+          <a class="btn" href="assets/cv/Rafael_Bertochi_CV_Backend_Jr.pdf" download>↓ Baixar CV</a>
+        </div>
+
+        <ul class="social">
+          <li><a href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:rafaelbertochi1@gmail.com">E-mail</a></li>
+        </ul>
+      </div>
+
+      <div class="stage" id="stage">
+        <button class="bot" id="bot" type="button" aria-label="Robô do Rafael. Clique para ele falar.">
+          <span class="bot__bubble" id="botBubble" role="status" aria-live="polite"></span>
+          <span class="bot__sprite" id="botSprite" aria-hidden="true"></span>
+        </button>
+        <div class="ground" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section class="section" id="missoes">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">MUNDO 1 · PROJETOS</p>
+          <h2 class="section__title">Missões principais</h2>
+          <p class="section__lead">
+            Projetos reais do meu estágio, rodando em produção. Os repositórios são versões de
+            portfólio: troquei nomes de empresa, sistemas e bancos por nomes genéricos.
+          </p>
+        </header>
+
+        <div class="cards cards--main">
+          <article class="card reveal">
+            <div class="card__top">
+              <span class="badge badge--live"><i></i>EM PRODUÇÃO</span>
+              <span class="card__num">1-1</span>
+            </div>
+            <h3 class="card__title">Robô de cadastro de vistorias</h3>
+            <p class="card__desc">
+              Leva o status das inspeções de um portal de laudos para o sistema de gestão da
+              empresa: exporta o relatório, cadastra as propostas e atribui o engenheiro
+              responsável. Tudo num único comando, com execução agendada. Substituiu um processo manual.
+            </p>
+            <p class="card__loot">O que eu resolvi</p>
+            <ul class="list">
+              <li>Travas para um fluxo que impacta pagamentos: confirmação por CPF exato, modo prévia, reconferência após cada gravação, idempotência e deduplicação.</li>
+              <li>Conferência uma a uma das inspeções canceladas antes de liberar o arquivo. Se a contagem não bate, o robô para e avisa em vez de seguir.</li>
+              <li>Filtros marcados por texto exato, testados contra as listas reais de 22 e 33 status, e tratamento de lista com rolagem virtual.</li>
+              <li>Integração com endpoints HTTP internos e ferramenta própria para mapear telas, frames e seletores.</li>
+            </ul>
+            <ul class="chips" aria-label="Tecnologias">
+              <li>Python</li><li>Playwright</li><li>HTTP</li><li>Excel</li><li>Git</li>
+            </ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-a" target="_blank" rel="noopener">Repo · Banco A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-b" target="_blank" rel="noopener">Repo · Banco B ↗</a>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card__top">
+              <span class="badge badge--live"><i></i>EM PRODUÇÃO</span>
+              <span class="card__num">1-2</span>
+            </div>
+            <h3 class="card__title">Pipeline de laudos imobiliários</h3>
+            <p class="card__desc">
+              Baixa laudos de avaliação de imóveis, extrai os dados e as fotos de cada PDF
+              e grava tudo num PostgreSQL, com o lote validado antes de qualquer gravação.
+            </p>
+            <p class="card__loot">O que eu resolvi</p>
+            <ul class="list">
+              <li>Download direto pela API da plataforma, com vários PDFs ao mesmo tempo e volta para a tela só quando a API não resolve.</li>
+              <li>Validação do lote inteiro antes de gravar: se algo indica layout novo de PDF, nada é gravado e sai um relatório.</li>
+              <li>Medição da própria taxa de acerto: compara ~20 campos do banco com uma segunda fonte dentro do PDF, numa amostra de 500 laudos.</li>
+              <li>Geocodificação de endereços sem coordenada (OpenStreetMap → CEP → cidade), com erro típico de ~180 m em 200 laudos testados.</li>
+            </ul>
+            <ul class="chips" aria-label="Tecnologias">
+              <li>Python</li><li>PostgreSQL</li><li>Docker</li><li>pdfplumber</li><li>PyMuPDF</li><li>Multiprocessing</li>
+            </ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-a" target="_blank" rel="noopener">Repo · Banco A ↗</a>
+              <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-b" target="_blank" rel="noopener">Repo · Banco B ↗</a>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="subhead reveal">Missões secundárias <span>· faculdade e estudos</span></h3>
+
+        <div class="cards cards--side">
+          <article class="card card--small reveal">
+            <div class="card__top">
+              <span class="badge badge--wip">EM PLANEJAMENTO</span>
+              <span class="card__num">2-1</span>
+            </div>
+            <h4 class="card__title">TCC · Pipeline de dados imobiliários</h4>
+            <p class="card__desc">
+              Coleta de anúncios de imóveis, ETL, banco relacional e análise exploratória.
+              Arquitetura em camadas com decisões registradas em ADRs e cuidados com LGPD e robots.txt.
+            </p>
+            <ul class="chips"><li>Python</li><li>SQLAlchemy</li><li>PostgreSQL</li><li>pytest</li></ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/Web_Scraper_TCC" target="_blank" rel="noopener">Repo ↗</a>
+            </div>
+          </article>
+
+          <article class="card card--small reveal">
+            <div class="card__top">
+              <span class="badge">EM GRUPO</span>
+              <span class="card__num">2-2</span>
+            </div>
+            <h4 class="card__title">Laboratório de Banco de Dados</h4>
+            <p class="card__desc">
+              Modelagem relacional, scripts DDL, views, cargas DML por período e consultas
+              estratégicas em SQL, com dicionário de dados e modelo documentados.
+            </p>
+            <ul class="chips"><li>SQL</li><li>Oracle</li><li>PL/SQL</li></ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/Lab_Banco_Dados" target="_blank" rel="noopener">Repo ↗</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="section" id="ficha">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">MUNDO 2 · SOBRE</p>
+          <h2 class="section__title">Ficha do personagem</h2>
+        </header>
+
+        <div class="sheet reveal">
+          <div class="sheet__id">
+            <div class="portrait" aria-hidden="true"><span data-sprite="robot" data-scale="big"></span></div>
+            <dl class="idlist">
+              <div><dt>Jogador</dt><dd>Rafael Bertochi Figueiredo</dd></div>
+              <div><dt>Classe</dt><dd>Back-end · Automação</dd></div>
+              <div><dt>Base</dt><dd>Mogi das Cruzes, SP</dd></div>
+              <div><dt>Guilda</dt><dd>Fatec Mogi das Cruzes · ADS</dd></div>
+              <div><dt>Idiomas</dt><dd>Português (nativo) · Inglês B2 (TOEIC)</dd></div>
+            </dl>
+          </div>
+
+          <div class="sheet__bio">
+            <p>
+              Estudo Análise e Desenvolvimento de Sistemas e sou estagiário de dados e
+              desenvolvimento. No dia a dia construo e mantenho em produção automações em
+              Python que integram sistemas web, endpoints HTTP, arquivos e bancos de dados.
+            </p>
+            <p>
+              Trabalho com Git, Docker e investigação de erros por logs, e uso IA agêntica
+              (Claude Code) revisando com cuidado tudo o que é gerado antes de ir para produção.
+              Tenho base em Java/POO com Spring e em SQL.
+            </p>
+          </div>
+
+          <div class="sheet__stats">
+            <h3 class="mini">Atributos</h3>
+            <ul class="stats" id="stats">
+              <li data-lvl="3"><span class="stats__name">Python</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">SQL</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">Playwright</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="3"><span class="stats__name">Java / POO</span><span class="stats__bar"></span><span class="stats__tag">INT</span></li>
+              <li data-lvl="2"><span class="stats__name">Docker</span><span class="stats__bar"></span><span class="stats__tag">BÁS</span></li>
+              <li data-lvl="2"><span class="stats__name">HTML / CSS</span><span class="stats__bar"></span><span class="stats__tag">BÁS</span></li>
+              <li data-lvl="1"><span class="stats__name">AWS</span><span class="stats__bar"></span><span class="stats__tag">NOÇÕES</span></li>
+            </ul>
+          </div>
+
+          <div class="sheet__inv">
+            <h3 class="mini">Inventário</h3>
+            <ul class="inv">
+              <li>Python</li><li>Playwright</li><li>PostgreSQL</li><li>Docker</li>
+              <li>Git</li><li>pdfplumber</li><li>PyMuPDF</li><li>Java</li>
+              <li>Spring</li><li>PL/SQL</li><li>Power BI</li><li>Excel / VBA</li>
+              <li>C++</li><li>Claude Code</li>
+            </ul>
+          </div>
+
+          <div class="sheet__moves">
+            <div class="move">
+              <h3 class="mini">Golpe especial</h3>
+              <p>Transformar um processo manual de horas num único comando.</p>
+            </div>
+            <div class="move">
+              <h3 class="mini">Habilidade passiva</h3>
+              <p>Nada que mexe com pagamento roda sem prévia e reconferência.</p>
+            </div>
+            <div class="move move--locked">
+              <h3 class="mini">Próximas habilidades</h3>
+              <ul class="locked">
+                <li>NestJS</li><li>TypeScript</li><li>Microsserviços</li><li>AWS</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIÊNCIA -->
+    <section class="section" id="jornada">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="section__kicker">MUNDO 3 · EXPERIÊNCIA</p>
+          <h2 class="section__title">Save points</h2>
+        </header>
+
+        <ol class="timeline">
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">ago/2026 · atual</p>
+              <h3 class="save__role">Estagiário de Dados e Desenvolvimento</h3>
+              <p class="save__org">Uono Sanchez</p>
+              <ul class="list">
+                <li>Robôs em Python e Playwright que exportam relatórios, cadastram propostas e atribuem o engenheiro responsável entre dois sistemas web, com execução agendada.</li>
+                <li>Automação do faturamento mensal de um cliente bancário: leitura de laudos em PDF (inclusive digitalizados), classificação por regras de negócio e validação de cada linha contra a base de preços.</li>
+                <li>Investigação e correção de bugs em produção a partir de logs e otimização de desempenho (headless, tempos de espera por variáveis de ambiente).</li>
+                <li>Git com branches e documentação técnica de cada projeto em README.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">jan/2025 · fev/2026</p>
+              <h3 class="save__role">Estagiário de Análise e Tratamento de Dados</h3>
+              <p class="save__org">COHAB SP</p>
+              <ul class="list">
+                <li>Análise e tratamento de grandes volumes de dados de gestão e recuperação de crédito imobiliário.</li>
+                <li>Automação de tarefas recorrentes com Excel avançado, macros e VBA.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="save reveal">
+            <span class="save__icon" data-sprite="floppy" aria-hidden="true"></span>
+            <div class="save__body">
+              <p class="save__date">ago/2024 · dez/2027 (previsão)</p>
+              <h3 class="save__role">Tecnologia em Análise e Desenvolvimento de Sistemas</h3>
+              <p class="save__org">Fatec Mogi das Cruzes</p>
+            </div>
+          </li>
+        </ol>
+
+        <h3 class="subhead reveal">Conquistas desbloqueadas <span>· cursos e certificados</span></h3>
+        <ul class="trophies">
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Backend Java com Spring AI</b><small>NTT DATA</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Curso Imersivo de Java</b><small>Rocketseat</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Python</b><small>Santander Open Academy</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Databases for Developers: Foundations</b><small>Oracle</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Fundamentos do Power BI</b><small>Santander Open Academy</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Segurança de Rede</b><small>Cisco</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Laboratório de Hardware</b><small>Cisco</small></li>
+          <li class="trophy reveal"><span data-sprite="trophy" aria-hidden="true"></span><b>Inglês B2</b><small>TOEIC</small></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section section--contact" id="contato">
+      <div class="wrap">
+        <div class="continue reveal">
+          <p class="continue__title">CONTINUE?</p>
+          <p class="continue__count" id="countdown" aria-hidden="true">9</p>
+          <p class="continue__text">
+            Estou procurando minha primeira vaga de Dev Back-end Júnior.
+            Se tiver uma oportunidade ou quiser trocar uma ideia, é só chamar.
+          </p>
+          <div class="hero__cta continue__cta">
+            <a class="btn btn--primary" href="mailto:rafaelbertochi1@gmail.com">▶ Mandar e-mail</a>
+            <a class="btn" href="https://www.linkedin.com/in/rafael-bertochi1" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn" href="https://github.com/rafaelbertochi1" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <button class="copy" id="copyEmail" type="button">rafaelbertochi1@gmail.com <span>[copiar]</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p>© 2026 Rafael Bertochi · Feito pixel por pixel.</p>
+      <p class="footer__hint">Dica: ↑ ↑ ↓ ↓ ← → ← → B A</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

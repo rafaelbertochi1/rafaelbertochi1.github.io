@@ -1,0 +1,365 @@
+/* Rafael Bertochi · portfólio retrô
+   Sem dependências: sprites em pixel art viram SVG, o resto é DOM puro. */
+(function () {
+  "use strict";
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Armazenamento (pode falhar em aba anônima) ----------
+  const store = {
+    get(area, key) { try { return window[area].getItem(key); } catch (e) { return null; } },
+    set(area, key, value) { try { window[area].setItem(key, value); } catch (e) { /* ignora */ } },
+  };
+
+  // ---------- Sprites ----------
+  const PALETTE = {
+    Y: "#ffcc4d", R: "#ff6b6b", G: "#8b98ad", B: "#2a8f99", L: "#5ce1e6",
+    K: "#0b0e14", M: "#0b0e14", C: "#3fb7c0", D: "#8b98ad", W: "#e6edf3",
+    S: "#8b98ad", T: "#c9971f",
+  };
+
+  const ROBOT_BASE = [
+    "......YY......",
+    "......GG......",
+    "..BBBBBBBBBB..",
+    ".BLLLLLLLLLLB.",
+    ".BLWKLLLLWKLB.",
+    ".BLKKLLLLKKLB.",
+    ".BLLLLLLLLLLB.",
+    ".BLLLMMMMLLLB.",
+    "..BBBBBBBBBB..",
+    ".....GGGG.....",
+    "D.CCCCCCCCCC.D",
+    "D.CCCYYYYCCC.D",
+    "..CCCCCCCCCC..",
+    "...DD....DD...",
+  ];
+
+  function variant(rows, changes) {
+    const copy = rows.slice();
+    Object.keys(changes).forEach((i) => { copy[i] = changes[i]; });
+    return copy;
+  }
+
+  const SPRITES = {
+    robot: ROBOT_BASE,
+    robotBlink: variant(ROBOT_BASE, { 4: ".BLLLLLLLLLLB.", 5: ".BLKKLLLLKKLB." }),
+    robotWalk: variant(ROBOT_BASE, { 13: "..DD......DD..", 10: ".DCCCCCCCCCCD.", 11: ".DCCCYYYYCCCD." }),
+    robotTalk: variant(ROBOT_BASE, { 0: "......RR......", 6: ".BLLMLLLLMLLB.", 7: ".BLLLMMMMLLLB." }),
+    floppy: [
+      "CCCCCCCCC.",
+      "CCSSSSKSCC",
+      "CCSSSSKSCC",
+      "CCSSSSSSCC",
+      "CCCCCCCCCC",
+      "CWWWWWWWWC",
+      "CWSSSSSSWC",
+      "CWWWWWWWWC",
+      "CWSSSSSSWC",
+      "CCCCCCCCCC",
+    ],
+    trophy: [
+      "YYYYYYYY",
+      "Y.WYYY.Y",
+      "Y.YYYY.Y",
+      ".YYYYYY.",
+      "..YYYY..",
+      "...YY...",
+      "..TTTT..",
+      ".TTTTTT.",
+    ],
+  };
+
+  const FLOPPY_COLORS = { C: "#2a8f99", K: "#0b0e14" };
+
+  function toSVG(rows, overrides) {
+    const h = rows.length;
+    const w = rows[0].length;
+    let rects = "";
+    rows.forEach((row, y) => {
+      for (let x = 0; x < row.length; x++) {
+        const ch = row[x];
+        if (ch === ".") continue;
+        const fill = (overrides && overrides[ch]) || PALETTE[ch];
+        rects += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${fill}"/>`;
+      }
+    });
+    return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">${rects}</svg>`;
+  }
+
+  const svgCache = {};
+  function sprite(name) {
+    if (!svgCache[name]) svgCache[name] = toSVG(SPRITES[name], name === "floppy" ? FLOPPY_COLORS : null);
+    return svgCache[name];
+  }
+
+  document.querySelectorAll("[data-sprite]").forEach((el) => {
+    el.innerHTML = sprite(el.dataset.sprite);
+  });
+
+  // ---------- Toast ----------
+  const toastEl = document.getElementById("toast");
+  let toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("is-on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("is-on"), 2400);
+  }
+
+  // ---------- Boot ----------
+  const boot = document.getElementById("boot");
+  const bootLog = document.getElementById("bootLog");
+  const BOOT_LINES = [
+    "RBF-BIOS v21.0  (c) 2026 Rafael Bertochi",
+    "",
+    "Checando memória ........... OK",
+    "Carregando python.exe ...... OK",
+    "Carregando playwright ...... OK",
+    "Conectando ao postgres ..... OK",
+    "Conferindo CPF ............. OK",
+    "",
+    "Iniciando RAFAEL.DEV",
+  ];
+
+  function runBoot(done) {
+    if (reduceMotion || /noboot/.test(location.search) || store.get("sessionStorage", "booted")) return done();
+    store.set("sessionStorage", "booted", "1");
+    boot.classList.add("is-on");
+    document.body.style.overflow = "hidden";
+    let i = 0;
+    let finished = false;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      clearInterval(timer);
+      boot.classList.add("is-off");
+      document.body.style.overflow = "";
+      setTimeout(() => { boot.classList.remove("is-on", "is-off"); done(); }, 360);
+      window.removeEventListener("keydown", finish);
+    };
+
+    const timer = setInterval(() => {
+      if (i < BOOT_LINES.length) {
+        bootLog.textContent += BOOT_LINES[i] + "\n";
+        i++;
+      } else {
+        setTimeout(finish, 350);
+        clearInterval(timer);
+      }
+    }, 150);
+
+    boot.addEventListener("click", finish);
+    window.addEventListener("keydown", finish);
+  }
+
+  // ---------- CRT ----------
+  const crtBtn = document.getElementById("crtToggle");
+  function setCRT(on) {
+    document.body.classList.toggle("crt", on);
+    crtBtn.setAttribute("aria-pressed", String(on));
+  }
+  setCRT(store.get("localStorage", "crt") !== "off");
+  crtBtn.addEventListener("click", () => {
+    const on = !document.body.classList.contains("crt");
+    setCRT(on);
+    store.set("localStorage", "crt", on ? "on" : "off");
+  });
+
+  // ---------- Robô ----------
+  const stage = document.getElementById("stage");
+  const bot = document.getElementById("bot");
+  const botSprite = document.getElementById("botSprite");
+  const bubble = document.getElementById("botBubble");
+
+  const PHRASES = [
+    "bip bop! rodando pipeline...",
+    "conferindo CPF... OK",
+    "0 envios duplicados hoje",
+    "modo prévia: nada foi enviado",
+    "procura-se: vaga júnior!",
+    "git pull --autostash",
+    "SELECT * FROM cafe;",
+    "lote validado. pode gravar.",
+    "robots.txt respeitado",
+  ];
+
+  const BOT_W = 56;
+  const SPEED = 38; // px por segundo
+  let x = 16;
+  let dir = 1;
+  let frame = 0;
+  let talking = false;
+  let pausedUntil = 0;
+  let lastFrameSwap = 0;
+  let lastTime = 0;
+  let stageVisible = true;
+  let phraseIdx = Math.floor(Math.random() * PHRASES.length);
+  let bubbleTimer;
+
+  function setBotSprite(name) {
+    if (botSprite.dataset.current === name) return;
+    botSprite.dataset.current = name;
+    botSprite.innerHTML = sprite(name);
+  }
+  setBotSprite("robot");
+
+  function say(text, ms) {
+    bubble.textContent = text;
+    bubble.classList.add("is-on");
+    talking = true;
+    setBotSprite("robotTalk");
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => {
+      bubble.classList.remove("is-on");
+      talking = false;
+    }, ms || 2200);
+  }
+
+  bot.addEventListener("click", () => {
+    bot.classList.remove("is-jump");
+    void bot.offsetWidth; // reinicia a animação
+    bot.classList.add("is-jump");
+    phraseIdx = (phraseIdx + 1) % PHRASES.length;
+    say(PHRASES[phraseIdx]);
+    pausedUntil = performance.now() + 2200;
+  });
+
+  function bounds() {
+    return { min: 16, max: Math.max(16, stage.clientWidth - 16 - BOT_W) };
+  }
+
+  function tick(now) {
+    if (!lastTime) lastTime = now;
+    const dt = Math.min(0.05, (now - lastTime) / 1000);
+    lastTime = now;
+
+    if (stageVisible) {
+      const b = bounds();
+      const walking = now > pausedUntil && !talking;
+
+      if (walking) {
+        x += dir * SPEED * dt;
+        if (x >= b.max) { x = b.max; dir = -1; }
+        if (x <= b.min) { x = b.min; dir = 1; }
+        if (Math.random() < 0.0025) pausedUntil = now + 1200 + Math.random() * 1800;
+
+        if (now - lastFrameSwap > 190) {
+          frame = 1 - frame;
+          lastFrameSwap = now;
+          setBotSprite(frame ? "robotWalk" : "robot");
+        }
+      } else if (!talking) {
+        // parado: pisca de vez em quando
+        const blink = Math.floor(now / 160) % 18 === 0;
+        setBotSprite(blink ? "robotBlink" : "robot");
+      }
+
+      bot.classList.toggle("is-flip", dir < 0);
+      bot.style.transform = `translateX(${Math.round(x - 16)}px)`;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      stageVisible = entries[0].isIntersecting;
+    }).observe(stage);
+  }
+
+  // ---------- Atributos ----------
+  document.querySelectorAll("#stats li").forEach((li) => {
+    const lvl = Number(li.dataset.lvl) || 0;
+    const bar = li.querySelector(".stats__bar");
+    bar.setAttribute("role", "img");
+    bar.setAttribute("aria-label", `nível ${lvl} de 5`);
+    for (let i = 0; i < 5; i++) {
+      const cell = document.createElement("i");
+      if (i < lvl) cell.className = "on";
+      bar.appendChild(cell);
+    }
+  });
+
+  // ---------- Reveal ----------
+  const reveals = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add("is-in"));
+  }
+
+  // ---------- Link ativo no menu ----------
+  const navLinks = Array.from(document.querySelectorAll(".nav__links a"));
+  if ("IntersectionObserver" in window) {
+    const sections = navLinks.map((a) => document.querySelector(a.getAttribute("href")));
+    const navIO = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === "#" + entry.target.id));
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    sections.forEach((s) => s && navIO.observe(s));
+  }
+
+  // ---------- CONTINUE? ----------
+  const countEl = document.getElementById("countdown");
+  let count = 9;
+  let countTimer;
+  function startCountdown() {
+    if (countTimer || reduceMotion) return;
+    countTimer = setInterval(() => {
+      count = count === 0 ? 9 : count - 1;
+      countEl.textContent = count;
+    }, 1000);
+  }
+  function stopCountdown() { clearInterval(countTimer); countTimer = null; }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      entries[0].isIntersecting ? startCountdown() : stopCountdown();
+    }).observe(countEl);
+  }
+
+  // ---------- Copiar e-mail ----------
+  document.getElementById("copyEmail").addEventListener("click", () => {
+    const email = "rafaelbertochi1@gmail.com";
+    const ok = () => toast("E-mail copiado!");
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(email).then(ok, () => toast(email));
+    } else {
+      toast(email);
+    }
+  });
+
+  // ---------- Konami ----------
+  const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  let konamiPos = 0;
+  window.addEventListener("keydown", (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    konamiPos = key === KONAMI[konamiPos] ? konamiPos + 1 : (key === KONAMI[0] ? 1 : 0);
+    if (konamiPos === KONAMI.length) {
+      konamiPos = 0;
+      const on = document.body.classList.toggle("party");
+      toast(on ? "Cheat ativado: +30 vidas!" : "Cheat desativado");
+      if (on) say("modo festa!!", 2600);
+    }
+  });
+
+  // ---------- Início ----------
+  runBoot(() => {
+    if (!reduceMotion) {
+      requestAnimationFrame(tick);
+      setTimeout(() => say("oi! sou o bot do Rafael", 2600), 700);
+    } else {
+      bot.style.transform = "translateX(0)";
+    }
+  });
+})();
