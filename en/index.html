@@ -21,13 +21,13 @@
   <link rel="alternate" hreflang="pt-BR" href="https://rafaelbertochi1.github.io/">
   <link rel="alternate" hreflang="en" href="https://rafaelbertochi1.github.io/en/">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20261006160105">
-  <link rel="stylesheet" href="../css/quest.css?v=20261006160105">
-  <link rel="stylesheet" href="../css/companion.css?v=20261006160105">
-  <link rel="stylesheet" href="../css/cursor.css?v=20261006160105">
+  <link rel="preload" href="../assets/fonts/press-start-2p.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css?v=20261016134914">
+  <link rel="stylesheet" href="../css/style.css?v=20261016134914">
+  <link rel="stylesheet" href="../css/quest.css?v=20261016134914">
+  <link rel="stylesheet" href="../css/companion.css?v=20261016134914">
+  <link rel="stylesheet" href="../css/cursor.css?v=20261016134914">
   <script>
     document.documentElement.classList.add('js');
     try { if (localStorage.getItem('rbf-direto') === '1') document.documentElement.classList.add('direto'); } catch (e) {}
@@ -97,6 +97,12 @@
           <span>Land my first junior role in <strong>Back-end</strong> or <strong>Data Engineering</strong>.</span>
         </p>
 
+        <p class="now">
+          <span class="now__tag">NOW</span>
+          <span class="now__text">Bringing the appraisal pipeline to a 3rd bank, improving the photo app my team uses and coding the foundation of my thesis.</span>
+          <time class="now__date" datetime="2026-10-16">updated Oct 2026</time>
+        </p>
+
         <div class="hero__cta">
           <a class="btn btn--primary" href="#missoes">▶ See projects</a>
           <a class="btn" href="../assets/cv/Rafael_Bertochi_Resume_Backend_EN.pdf" download data-goatcounter-click="en-cv-backend-topo">↓ CV Back-end</a>
@@ -150,8 +156,13 @@
               <li>Filters selected by exact text, tested against the real lists of 22 and 33 statuses, plus handling of a virtually scrolled list.</li>
               <li>Integration with internal HTTP endpoints and a tool I built to map screens, frames and selectors.</li>
             </ul>
+            <ul class="kpis">
+              <li><b>5</b><small>stages in a single command</small></li>
+              <li><b>2</b><small>banks served</small></li>
+              <li><b>292</b><small>automated tests in CI</small></li>
+            </ul>
             <ul class="chips" aria-label="Technologies">
-              <li>Python</li><li>Playwright</li><li>HTTP</li><li>Excel</li><li>Git</li>
+              <li>Python</li><li>Playwright</li><li>HTTP</li><li>Excel</li><li>pytest</li><li>GitHub Actions</li>
             </ul>
             <div class="card__links">
               <a href="https://github.com/rafaelbertochi1/robo-cadastro-banco-a" target="_blank" rel="noopener" data-goatcounter-click="en-repo-robo-cadastro-banco-a">Repo · Bank A ↗</a>
@@ -175,6 +186,11 @@
               <li>Validates the whole batch before writing: if anything points to a new PDF layout, nothing is written and a report comes out.</li>
               <li>Measures its own accuracy: compares ~20 database fields against a second source inside the PDF, on a sample of 500 reports.</li>
               <li>Geocodes addresses without coordinates (OpenStreetMap → ZIP code → city), with a typical error of ~180 m across 200 tested reports.</li>
+            </ul>
+            <ul class="kpis">
+              <li><b>3</b><small>client banks in production</small></li>
+              <li><b>500</b><small>reports in the accuracy check</small></li>
+              <li><b>272</b><small>automated tests in CI</small></li>
             </ul>
             <details class="arch">
               <summary>See the architecture</summary>
@@ -200,6 +216,37 @@
               <a href="https://github.com/rafaelbertochi1/pipeline-laudos-banco-b" target="_blank" rel="noopener" data-goatcounter-click="en-repo-pipeline-laudos-banco-b">Repo · Bank B ↗</a>
             </div>
           </article>
+
+          <article class="card card--wide reveal">
+            <div class="card__top">
+              <span class="badge badge--live"><i></i>USED BY MY TEAM</span>
+              <span class="card__num">1-3</span>
+            </div>
+            <h3 class="card__title">Appraisal photo app</h3>
+            <p class="card__desc">
+              Desktop program the appraisal team uses every day: it fetches the photos of a
+              proposal from the system, lets you pick, order and name them, and builds the photo
+              report in Excel using each bank's template. This used to be done by hand, photo by photo.
+            </p>
+            <p class="card__loot">What I solved</p>
+            <ul class="list">
+              <li>One profile per bank: sheets, photo blocks, frames and file name live in a config. A new bank is a template folder plus a profile.</li>
+              <li>Pre-fills the bank's form with the inspection data, picking the template automatically from the type of operation.</li>
+              <li>Regression tests against answer keys from real cases, so a new version can't break a template that already worked.</li>
+              <li>Shipped as a versioned .exe, published to a shared folder and as releases.</li>
+            </ul>
+            <ul class="kpis">
+              <li><b>6</b><small>versions shipped in 1 week</small></li>
+              <li><b>2</b><small>banks with their own templates</small></li>
+              <li><b>21</b><small>automated tests in CI</small></li>
+            </ul>
+            <ul class="chips" aria-label="Technologies">
+              <li>Python</li><li>Tkinter</li><li>openpyxl</li><li>Playwright</li><li>PyInstaller</li><li>pytest</li>
+            </ul>
+            <div class="card__links">
+              <a href="https://github.com/rafaelbertochi1/app-fotos-laudos" target="_blank" rel="noopener" data-goatcounter-click="en-repo-app-fotos-laudos">Repo ↗</a>
+            </div>
+          </article>
         </div>
 
         <h3 class="subhead reveal">Side quests <span>· college and studies</span></h3>
@@ -207,15 +254,16 @@
         <div class="cards cards--side">
           <article class="card card--small reveal">
             <div class="card__top">
-              <span class="badge badge--wip">PLANNING</span>
+              <span class="badge badge--wip">IN PROGRESS</span>
               <span class="card__num">2-1</span>
             </div>
             <h4 class="card__title">Thesis · Real estate data pipeline</h4>
             <p class="card__desc">
               Collection of property listings, ETL, relational database and exploratory analysis.
-              Layered architecture with decisions recorded in ADRs, respecting privacy law (LGPD) and robots.txt.
+              The foundation already runs: a collector that respects robots.txt and rate limits, validated ETL
+              and price history in the database, with 106 tests in CI and decisions recorded in ADRs.
             </p>
-            <ul class="chips"><li>Python</li><li>SQLAlchemy</li><li>PostgreSQL</li><li>pytest</li></ul>
+            <ul class="chips"><li>Python</li><li>SQLAlchemy</li><li>PostgreSQL</li><li>pydantic</li><li>pytest</li></ul>
             <div class="card__links">
               <a href="https://github.com/rafaelbertochi1/Web_Scraper_TCC" target="_blank" rel="noopener" data-goatcounter-click="en-repo-Web_Scraper_TCC">Repo ↗</a>
             </div>
@@ -294,7 +342,7 @@
               <li>Python</li><li>Playwright</li><li>PostgreSQL</li><li>Docker</li>
               <li>Git</li><li>pdfplumber</li><li>PyMuPDF</li><li>Java</li>
               <li>Spring</li><li>PL/SQL</li><li>Power BI</li><li>Excel / VBA</li>
-              <li>C++</li><li>Claude Code</li>
+              <li>pytest</li><li>Tkinter</li><li>C++</li><li>Claude Code</li>
             </ul>
             <div class="inv__info" id="invInfo" aria-live="polite">
               <p class="inv__hint">Click an item to see where I've used it.</p>
@@ -338,7 +386,8 @@
               <p class="save__org">Uono Sanchez</p>
               <ul class="list">
                 <li>Python and Playwright bot that exports reports, registers proposals and assigns the responsible engineer.</li>
-                <li>Appraisal pipeline: API downloads, PDF extraction and loading into PostgreSQL with Docker.</li>
+                <li>Appraisal pipelines for three client banks: API downloads, PDF extraction and loading into PostgreSQL with Docker.</li>
+                <li>Python desktop app my team uses to build the photo report of each appraisal, with versioned releases and regression tests.</li>
                 <li>Automated monthly billing for a banking client: reading PDF reports and validating them against the price table.</li>
                 <li>Safeguards on a payment-related flow and production bug fixes from logs.</li>
               </ul>
@@ -405,11 +454,11 @@
           </div>
 
           <div class="vsc__body">
-            <aside class="vsc__explorer" aria-label="Challenge files">
+            <div class="vsc__explorer" role="group" aria-label="Challenge files">
               <p class="vsc__label">EXPLORER</p>
               <p class="vsc__folder">▾ PYTHON-CHALLENGES</p>
               <ul class="vsc__files" id="qFiles"></ul>
-            </aside>
+            </div>
 
             <div class="vsc__editor">
               <div class="vsc__tabs">
@@ -419,7 +468,7 @@
               <div class="vsc__code" id="qCode" aria-label="Challenge code"></div>
             </div>
 
-            <aside class="vsc__tutor" aria-live="polite">
+            <div class="vsc__tutor" aria-live="polite">
               <div class="tutor__head">
                 <span class="tutor__bot" data-sprite="robot" aria-hidden="true"></span>
                 <span>TUTOR</span>
@@ -431,7 +480,7 @@
                 <button class="qbtn qbtn--ghost" id="qSkip" type="button">⏩ Skip typing</button>
                 <button class="qbtn" id="qNext" type="button">Start ▶</button>
               </div>
-            </aside>
+            </div>
 
             <div class="vsc__panel">
               <div class="vsc__ptabs" aria-hidden="true">
@@ -496,12 +545,12 @@
 
   <div class="mc" id="mcToasts" aria-live="polite"></div>
 
-  <script src="../js/main.js?v=20261006160105"></script>
-  <script src="../js/name.js?v=20261006160105"></script>
-  <script src="../js/build.js?v=20261006160105"></script>
-  <script src="../js/quest.js?v=20261006160105"></script>
-  <script src="../js/companion.js?v=20261006160105"></script>
-  <script src="../js/cursor.js?v=20261006160105"></script>
+  <script src="../js/main.js?v=20261016134914"></script>
+  <script src="../js/name.js?v=20261016134914"></script>
+  <script src="../js/build.js?v=20261016134914"></script>
+  <script src="../js/quest.js?v=20261016134914"></script>
+  <script src="../js/companion.js?v=20261016134914"></script>
+  <script src="../js/cursor.js?v=20261016134914"></script>
   <!-- Contador de visitas anônimo, sem cookies (GoatCounter) -->
   <script data-goatcounter="https://rafaelbertochi.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>

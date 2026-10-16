@@ -437,7 +437,7 @@
 
   // ---------- Inventário: onde cada tecnologia já foi usada ----------
   const INV_INFO = EN ? {
-    "Python": "My main language at my internship at Uono Sanchez: registration bots, the appraisal pipeline and the monthly billing automation. It's also the base of my thesis.",
+    "Python": "My main language at my internship at Uono Sanchez: registration bots, the appraisal pipelines, the photo desktop app and the monthly billing automation. It's also the base of my thesis.",
     "Playwright": "Web automation for the bots I built at Uono Sanchez: login, filters, report exports and registering proposals across two systems, plus downloading reports in the pipeline.",
     "PostgreSQL": "Database of the appraisal pipeline at Uono Sanchez: the data extracted from each PDF and the comparable properties go into their own tables, via psycopg2.",
     "Docker": "At Uono Sanchez, runs the pipeline's PostgreSQL and Adminer with docker compose, so the environment works the same on any machine.",
@@ -449,10 +449,12 @@
     "PL/SQL": "Fatec's Database Lab (group work): modeling, DDL, views, period-based loads and strategic queries on Oracle.",
     "Power BI": "At COHAB SP, active use in productivity and billing dashboards. At Uono Sanchez, in productivity dashboards. I also took the Power BI Fundamentals course (Santander Open Academy).",
     "Excel / VBA": "At COHAB SP, macros and VBA to automate the team's recurring tasks. At Uono Sanchez, automated a billing spreadsheet while preserving its formulas and validations.",
+    "pytest": "Automated tests on my portfolio projects (bots, pipelines and the photo app), running on GitHub Actions on every push. On the photo app, regression tests compare each output against answer keys from real cases.",
+    "Tkinter": "Interface of the photo desktop app I built at Uono Sanchez: photo gallery, ordering, naming and the bank form, packaged as an .exe with PyInstaller.",
     "C++": "Programming logic and data structures in my Fatec courses.",
     "Claude Code": "Agentic AI in my day-to-day at Uono Sanchez, always carefully reviewing the generated code before it reaches production.",
   } : {
-    "Python": "Linguagem principal do meu estágio na Uono Sanchez: robôs de cadastro, pipeline de laudos e automação do faturamento mensal. Também é a base do meu TCC.",
+    "Python": "Linguagem principal do meu estágio na Uono Sanchez: robôs de cadastro, pipelines de laudos, o app desktop de fotos e a automação do faturamento mensal. Também é a base do meu TCC.",
     "Playwright": "Automação web dos robôs que criei na Uono Sanchez: login, filtros, exportação de relatórios e cadastro de propostas entre dois sistemas, além do download de laudos na pipeline.",
     "PostgreSQL": "Banco de dados da pipeline de laudos na Uono Sanchez: os dados extraídos de cada PDF e os imóveis comparativos são gravados em tabelas próprias, via psycopg2.",
     "Docker": "Na Uono Sanchez, sobe o PostgreSQL e o Adminer da pipeline de laudos com docker compose, para o ambiente funcionar igual em qualquer máquina.",
@@ -464,6 +466,8 @@
     "PL/SQL": "Laboratório de Banco de Dados da Fatec (em grupo): modelagem, DDL, views, cargas por período e consultas estratégicas no Oracle.",
     "Power BI": "Na COHAB SP, uso ativo em dashboards de produtividade e de faturamento. Na Uono Sanchez, em dashboards de produtividade. Também fiz o curso de Fundamentos do Power BI (Santander Open Academy).",
     "Excel / VBA": "Na COHAB SP, macros e VBA para automatizar tarefas recorrentes da equipe. Na Uono Sanchez, automação de uma planilha de faturamento preservando fórmulas e validações.",
+    "pytest": "Testes automatizados nos projetos do portfólio (robôs, pipelines e o app de fotos), rodando no GitHub Actions a cada push. No app de fotos, testes de regressão comparam cada saída com gabaritos de casos reais.",
+    "Tkinter": "Interface do app desktop de fotos que criei na Uono Sanchez: galeria, ordenação, nomes das fotos e formulário do banco, empacotado como .exe com o PyInstaller.",
     "C++": "Lógica de programação e estruturas de dados nas disciplinas da Fatec.",
     "Claude Code": "IA agêntica no dia a dia do estágio na Uono Sanchez, sempre revisando com cuidado o código gerado antes de ir para produção.",
   };
