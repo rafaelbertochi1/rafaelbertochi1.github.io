@@ -392,7 +392,7 @@
   const CHIRPS = EN
     ? ["Psst!", "Beep boop!", "I'm watching!", "All good there?", "Scrolling along!"]
     : ["Psiu!", "Bip bop!", "Tô de olho!", "Tudo certo aí?", "Rolando junto!"];
-  const PERCHES = [".card", ".section__title", ".subhead", ".sheet", ".save__body", ".trophy", ".vsc", ".qach__item", ".continue", ".quest"];
+  const PERCHES = [".card", ".section__title", ".subhead", ".sheet", ".save__body", ".trophy", ".vsc", ".qach__item", ".continue"];
   let roamTimer;
 
   function landables() {

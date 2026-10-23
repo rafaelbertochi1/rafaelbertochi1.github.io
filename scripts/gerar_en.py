@@ -57,9 +57,6 @@ PAIRS = [
      """I build bots and data pipelines in Python: I extract information from web systems
           and PDFs, then clean, validate and load it into databases, with no manual work along
           the way. Today they run in production at my internship."""),
-    ("QUEST ATUAL", "CURRENT QUEST"),
-    ("<span>Encontrar minha primeira vaga júnior em <strong>Back-end</strong> ou <strong>Engenharia de Dados</strong>.</span>",
-     "<span>Land my first junior role in <strong>Back-end</strong> or <strong>Data Engineering</strong>.</span>"),
     ("▶ Ver projetos", "▶ See projects"),
     ('<span class="now__tag">AGORA</span>', '<span class="now__tag">NOW</span>'),
     ("Levando a pipeline de laudos para o 3º banco, evoluindo o app de fotos que a equipe usa e codando a base do meu TCC.",
